@@ -1,0 +1,12 @@
+Package: fitr
+Title: Bacterial Growth Rate Fitting in R
+Version: 0.1
+Author: Daniel Angst <dcangst@gmail.com>
+Maintainer: Daniel Angst <dcangst@gmail.com>
+Description: What the package does (paragraph)
+Depends:
+    R (>= 3.1.0)
+Imports:
+    plyr
+License: GPL-3
+LazyData: true

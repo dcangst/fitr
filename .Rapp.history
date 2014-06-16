@@ -1,0 +1,567 @@
+readkeygraph <- function(prompt)#
+{#
+    getGraphicsEvent(prompt = prompt, #
+                 onMouseDown = NULL, onMouseMove = NULL,#
+                 onMouseUp = NULL, onKeybd = onKeybd,#
+                 consolePrompt = "[click on graph then follow top prompt to continue]")#
+    Sys.sleep(0.01)#
+    return(keyPressed)#
+}#
+#
+onKeybd <- function(key)#
+{#
+    keyPressed <<- key#
+}#
+#
+xaxis=c(1:10) # Set up the x-axis.#
+yaxis=runif(10,min=0,max=1) # Set up the y-axis.#
+plot(xaxis,yaxis)#
+#
+for (i in xaxis)#
+{#
+    # On each keypress, color the points on the graph in red, one by one.#
+    points(i,yaxis[i],col="red", pch=19)#
+    keyPressed = readkeygraph("[press any key to continue]")#
+}
+load_all()
+growthDataOneMissing <- growthDataOne#
+growthDataOneMissing$ODred[1:5] <- NA#
+#
+data <- growthDataOneMissing#
+fits <- linfit(growthDataOne,w_size=15,od_name="ODred",time_name="time")#
+fits#
+library(doParallel)#
+registerDoParallel()#
+getDoParWorkers()#
+getDoParName()#
+#
+system.time(five_fits <- dlply(growthDataFive,.(ID),linfit,w_size=15,od_name="ODred",time_name="time"))#
+system.time(five_fits <- dlply(growthDataFive,.(ID),linfit,w_size=15,od_name="ODred",time_name="time",.parallel=TRUE))#
+#
+(best <- pickfit(five_fits))#
+#
+plotfits(best,fits,data,od_name="ODred",time_name="time")
+load_all()
+growthDataOneMissing <- growthDataOne#
+growthDataOneMissing$ODred[1:5] <- NA#
+#
+data <- growthDataOneMissing#
+fits <- linfit(growthDataOne,w_size=15,od_name="ODred",time_name="time")#
+fits#
+library(doParallel)#
+registerDoParallel()#
+getDoParWorkers()#
+getDoParName()#
+#
+system.time(five_fits <- dlply(growthDataFive,.(ID),linfit,w_size=15,od_name="ODred",time_name="time"))#
+system.time(five_fits <- dlply(growthDataFive,.(ID),linfit,w_size=15,od_name="ODred",time_name="time",.parallel=TRUE))#
+#
+(best <- pickfit(five_fits))#
+#
+plotfits(best,fits,data,od_name="ODred",time_name="time")
+load_all()
+plotfits(best,fits,data,od_name="ODred",time_name="time")
+best
+fits
+data
+load_all()
+plotfits(best,fits,data,od_name="ODred",time_name="time")
+load_all()
+plotfits(best,fits,data,od_name="ODred",time_name="time")
+best_five_fits <- ldply(five_fits,pickfit)
+plotfits(best_five_fits,five_fits,growthDataFive,od_name="ODred",time_name="time")
+bestfit <- best_five_fits#
+fits <- five_fits#
+data <- growthDataFive#
+od_name <- "ODred"#
+time_name <- "time"
+od_colnr <- which(colnames(data) == od_name)
+time_colnr <- which(colnames(data) == time_name)
+data <- data[with(data, order(data[,time_colnr])), ]
+nFits <- dim(bestfit)[1]
+if (select == FALSE) {#
+    IDs <- sort(unique(data$ID))#
+  } else {#
+    IDs <- select#
+    data <- subset(data, ID %in% select)    #
+  }
+select <- FALSE
+if (select == FALSE) {#
+    IDs <- sort(unique(data$ID))#
+  } else {#
+    IDs <- select#
+    data <- subset(data, ID %in% select)    #
+  }
+IDs
+data
+if (nFits != length(IDs)){stop("unequal dimensions of data and fits") }
+nFits != length(IDs)
+for (i in 1:nFits){#
+    data_sub <- subset(data, ID == IDs[i]) #
+    par(mfrow=c(3,1))#
+    plot(data_sub[,time_colnr], log10(data_sub[,od_colnr]), xlab="time", ylab="OD600",type="b",main=data_sub$ID[1])#
+    #mtext(paste(names(onecurve[c(1,6:9)]),collapse="  |  "),side=3,line=0.5,cex=0.5)#
+    #mtext(paste(names(bestfit),collapse=" | "),side=1,line=4,cex=0.5)#
+    #mtext(paste(signif(bestfit,3),collapse=" | "),side=1,line=5,cex=0.5)#
+    abline(a=bestfit$intercept ,b=bestfit$mumax,col="red")#
+    color <- rgb((fits$pearCoeff-min(fits$pearCoeff))/(max(fits$pearCoeff)-min(fits$pearCoeff)),0,1-(fits$pearCoeff-min(fits$pearCoeff))/(max(fits$pearCoeff)-min(fits$pearCoeff)))#
+    plot(fits$minP,fits$mumax,col=color)#
+    points(bestfit$minP,bestfit$mumax,col="blue",pch=8,cex=1.5)#
+    plot(fits$minP,fits$pearCoeff,col=color)#
+    points(bestfit$minP,bestfit$pearCoeff,col="blue",pch=8,cex=1.5)#
+    locator(1)#
+  }
+i
+data_sub <- subset(data, ID == IDs[i])
+data_sub
+plot(data_sub[,time_colnr], log10(data_sub[,od_colnr]), xlab="time", ylab="OD600",type="b",main=data_sub$ID[1])
+bestfit
+for (i in 1:nFits){#
+    data_sub <- subset(data, ID == IDs[i]) #
+    bestfit_sub <- subset(bestfit, ID == IDs[i])#
+#
+    par(mfrow=c(3,1))#
+    plot(data_sub[,time_colnr], log10(data_sub[,od_colnr]), xlab="time", ylab="OD600",type="b",main=data_sub$ID[1])#
+    #mtext(paste(names(onecurve[c(1,6:9)]),collapse="  |  "),side=3,line=0.5,cex=0.5)#
+    #mtext(paste(names(bestfit_sub),collapse=" | "),side=1,line=4,cex=0.5)#
+    #mtext(paste(signif(bestfit_sub,3),collapse=" | "),side=1,line=5,cex=0.5)#
+    abline(a=bestfit_sub$intercept ,b=bestfit_sub$mumax,col="red")#
+    color <- rgb((fits$pearCoeff-min(fits$pearCoeff))/(max(fits$pearCoeff)-min(fits$pearCoeff)),0,1-(fits$pearCoeff-min(fits$pearCoeff))/(max(fits$pearCoeff)-min(fits$pearCoeff)))#
+    plot(fits$minP,fits$mumax,col=color)#
+    points(bestfit_sub$minP,bestfit_sub$mumax,col="blue",pch=8,cex=1.5)#
+    plot(fits$minP,fits$pearCoeff,col=color)#
+    points(bestfit_sub$minP,bestfit_sub$pearCoeff,col="blue",pch=8,cex=1.5)#
+    locator(1)#
+  }
+fits
+?subset
+fits$IDs[1]
+fits$IDs[3]
+fits$'IDs[3]
+''
+''
+'
+''
+''
+''
+''
+fits$'IDs[3]'
+?dlply
+attr(fits,"split_labels")
+attr(fits,"split_labels")[,ID==1]
+subset(attr(fits,"split_labels"),ID==1)
+colnames(subset(attr(fits,"split_labels"),ID==1))
+rownames(subset(attr(fits,"split_labels"),ID==1))
+fits[[1]]
+as.numeric(rownames(subset(attr(fits,"split_labels"),ID==1)))
+fits_sub <- fits[[as.numeric(rownames(subset(attr(fits,"split_labels"),ID==1)))]]
+fits_sub
+for (i in 1:nFits){#
+    data_sub <- subset(data, ID == IDs[i]) #
+    bestfit_sub <- subset(bestfit, ID == IDs[i])#
+    fits_sub <- fits[[as.numeric(rownames(subset(attr(fits,"split_labels"),ID==1)))]]#
+#
+    par(mfrow=c(3,1))#
+    plot(data_sub[,time_colnr], log10(data_sub[,od_colnr]), xlab="time", ylab="OD600",type="b",main=data_sub$ID[1])#
+    #mtext(paste(names(onecurve[c(1,6:9)]),collapse="  |  "),side=3,line=0.5,cex=0.5)#
+    #mtext(paste(names(bestfit_sub),collapse=" | "),side=1,line=4,cex=0.5)#
+    #mtext(paste(signif(bestfit_sub,3),collapse=" | "),side=1,line=5,cex=0.5)#
+    abline(a=bestfit_sub$intercept ,b=bestfit_sub$mumax,col="red")#
+    color <- rgb((fits_sub$pearCoeff-min(fits_sub$pearCoeff))/(max(fits_sub$pearCoeff)-min(fits_sub$pearCoeff)),0,1-(fits_sub$pearCoeff-min(fits_sub$pearCoeff))/(max(fits_sub$pearCoeff)-min(fits_sub$pearCoeff)))#
+    plot(fits_sub$minP,fits_sub$mumax,col=color)#
+    points(bestfit_sub$minP,bestfit_sub$mumax,col="blue",pch=8,cex=1.5)#
+    plot(fits_sub$minP,fits_sub$pearCoeff,col=color)#
+    points(bestfit_sub$minP,bestfit_sub$pearCoeff,col="blue",pch=8,cex=1.5)#
+    locator(1)#
+  }
+for (i in 1:nFits){#
+    data_sub <- subset(data, ID == IDs[i]) #
+    bestfit_sub <- subset(bestfit, ID == IDs[i])#
+    fits_sub <- fits[[as.numeric(rownames(subset(attr(fits,"split_labels"),ID==1)))]]#
+#
+    par(mfrow=c(3,1))#
+    plot(data_sub[,time_colnr], log10(data_sub[,od_colnr]), xlab="time", ylab="OD600",type="b",main=data_sub$ID[1])#
+    #mtext(paste(names(onecurve[c(1,6:9)]),collapse="  |  "),side=3,line=0.5,cex=0.5)#
+    #mtext(paste(names(bestfit_sub),collapse=" | "),side=1,line=4,cex=0.5)#
+    #mtext(paste(signif(bestfit_sub,3),collapse=" | "),side=1,line=5,cex=0.5)#
+    abline(a=bestfit_sub$intercept ,b=bestfit_sub$mumax,col="red")#
+    color <- rgb((fits_sub$pearCoeff-min(fits_sub$pearCoeff))/(max(fits_sub$pearCoeff)-min(fits_sub$pearCoeff)),0,1-(fits_sub$pearCoeff-min(fits_sub$pearCoeff))/(max(fits_sub$pearCoeff)-min(fits_sub$pearCoeff)))#
+    plot(fits_sub$minP,fits_sub$mumax,col=color)#
+    points(bestfit_sub$minP,bestfit_sub$mumax,col="blue",pch=8,cex=1.5)#
+    plot(fits_sub$minP,fits_sub$pearCoeff,col=color)#
+    points(bestfit_sub$minP,bestfit_sub$pearCoeff,col="blue",pch=8,cex=1.5)#
+    locator(1)#
+  }
+for (i in 1:nFits){#
+    data_sub <- subset(data, ID == IDs[i]) #
+    bestfit_sub <- subset(bestfit, ID == IDs[i])#
+    fits_sub <- fits[[as.numeric(rownames(subset(attr(fits,"split_labels"),ID==1)))]]#
+#
+    par(mfrow=c(3,1))#
+    plot(data_sub[,time_colnr], log10(data_sub[,od_colnr]), xlab="time", ylab="OD600",type="b",main=data_sub$ID[1])#
+    #mtext(paste(names(onecurve[c(1,6:9)]),collapse="  |  "),side=3,line=0.5,cex=0.5)#
+    #mtext(paste(names(bestfit_sub),collapse=" | "),side=1,line=4,cex=0.5)#
+    #mtext(paste(signif(bestfit_sub,3),collapse=" | "),side=1,line=5,cex=0.5)#
+    abline(a=bestfit_sub$intercept ,b=bestfit_sub$mumax,col="red")#
+    color <- rgb((fits_sub$pearCoeff-min(fits_sub$pearCoeff))/(max(fits_sub$pearCoeff)-min(fits_sub$pearCoeff)),0,1-(fits_sub$pearCoeff-min(fits_sub$pearCoeff))/(max(fits_sub$pearCoeff)-min(fits_sub$pearCoeff)))#
+    plot(fits_sub$minP,fits_sub$mumax,col=color)#
+    points(bestfit_sub$minP,bestfit_sub$mumax,col="blue",pch=8,cex=1.5)#
+    plot(fits_sub$minP,fits_sub$pearCoeff,col=color)#
+    points(bestfit_sub$minP,bestfit_sub$pearCoeff,col="blue",pch=8,cex=1.5)#
+    locator(1)#
+  }
+fits_sub
+fits_sub
+data_sub
+bestfit_sub
+for (i in 1:nFits){#
+    data_sub <- subset(data, ID == IDs[i]) #
+    bestfit_sub <- subset(bestfit, ID == IDs[i])#
+    fits_sub <- fits[[as.numeric(rownames(subset(attr(fits,"split_labels"),ID==IDs[i])))]]#
+#
+    par(mfrow=c(3,1))#
+    plot(data_sub[,time_colnr], log10(data_sub[,od_colnr]), xlab="time", ylab="OD600",type="b",main=data_sub$ID[1])#
+    #mtext(paste(names(onecurve[c(1,6:9)]),collapse="  |  "),side=3,line=0.5,cex=0.5)#
+    #mtext(paste(names(bestfit_sub),collapse=" | "),side=1,line=4,cex=0.5)#
+    #mtext(paste(signif(bestfit_sub,3),collapse=" | "),side=1,line=5,cex=0.5)#
+    abline(a=bestfit_sub$intercept ,b=bestfit_sub$mumax,col="red")#
+    color <- rgb((fits_sub$pearCoeff-min(fits_sub$pearCoeff))/(max(fits_sub$pearCoeff)-min(fits_sub$pearCoeff)),0,1-(fits_sub$pearCoeff-min(fits_sub$pearCoeff))/(max(fits_sub$pearCoeff)-min(fits_sub$pearCoeff)))#
+    plot(fits_sub$minP,fits_sub$mumax,col=color)#
+    points(bestfit_sub$minP,bestfit_sub$mumax,col="blue",pch=8,cex=1.5)#
+    plot(fits_sub$minP,fits_sub$pearCoeff,col=color)#
+    points(bestfit_sub$minP,bestfit_sub$pearCoeff,col="blue",pch=8,cex=1.5)#
+    locator(1)#
+  }
+load_all()
+growthDataOneMissing <- growthDataOne#
+growthDataOneMissing$ODred[1:5] <- NA#
+#
+data <- growthDataOneMissing#
+fits <- linfit(growthDataOne,w_size=15,od_name="ODred",time_name="time")#
+fits#
+library(doParallel)#
+registerDoParallel()#
+getDoParWorkers()#
+getDoParName()#
+#
+system.time(five_fits <- dlply(growthDataFive,.(ID),linfit,w_size=15,od_name="ODred",time_name="time"))#
+system.time(five_fits <- dlply(growthDataFive,.(ID),linfit,w_size=15,od_name="ODred",time_name="time",.parallel=TRUE))#
+#
+(best <- pickfit(five_fits))#
+#
+plotfits(best,fits,data,od_name="ODred",time_name="time")#
+#
+best_five_fits <- ldply(five_fits,pickfit)
+five_fits
+plotfits(best,fits,data,od_name="ODred",time_name="time")
+best
+fits
+best_five_fits
+best
+fits
+is.list(fits)
+fits <- linfit(growthDataOne,w_size=15,od_name="ODred",time_name="time")
+fits
+is.list(fits)
+is.data.frame(fits)
+str(fits)
+d <- data.frame(a=1:10,b=1:10,c=2:11)
+d
+is.list(d)
+is.data.frame(d)
+length(d)
+length(five_fits)
+length(fits)
+str(five_fits)
+?is.list
+dim(fits)
+dim(five_fits)
+?dim
+attr(fits)
+attr(fits,)
+str(fits)
+str(five_fits)
+attr(*,*)
+?attr
+class(fits)
+class(five_fits)
+load_all()
+growthDataOneMissing <- growthDataOne#
+growthDataOneMissing$ODred[1:5] <- NA#
+#
+data <- growthDataOneMissing#
+fits <- linfit(growthDataOne,w_size=15,od_name="ODred",time_name="time")
+fits
+library(doParallel)#
+registerDoParallel()#
+getDoParWorkers()#
+getDoParName()#
+#
+system.time(five_fits <- dlply(growthDataFive,.(ID),linfit,w_size=15,od_name="ODred",time_name="time"))#
+system.time(five_fits <- dlply(growthDataFive,.(ID),linfit,w_size=15,od_name="ODred",time_name="time",.parallel=TRUE))#
+#
+(best <- pickfit(five_fits))#
+#
+plotfits(best,fits,data,od_name="ODred",time_name="time")
+?fits
+(best <- pickfit(five_fits))
+five_fits
+(best <- pickfit(fits))
+plotfits(best,fits,data,od_name="ODred",time_name="time")
+fits
+load_all()
+growthDataOneMissing <- growthDataOne#
+growthDataOneMissing$ODred[1:5] <- NA#
+#
+data <- growthDataOneMissing#
+fits <- linfit(growthDataOne,w_size=15,od_name="ODred",time_name="time")#
+fits#
+library(doParallel)#
+registerDoParallel()#
+getDoParWorkers()#
+getDoParName()#
+#
+system.time(five_fits <- dlply(growthDataFive,.(ID),linfit,w_size=15,od_name="ODred",time_name="time"))#
+system.time(five_fits <- dlply(growthDataFive,.(ID),linfit,w_size=15,od_name="ODred",time_name="time",.parallel=TRUE))#
+#
+(best <- pickfit(fits))
+plotfits(best,fits,data,od_name="ODred",time_name="time")
+fits
+if (class(fits)=="data.frame"){#
+    fits$ID <- 9999999    #
+  }
+fits
+bestfit
+best
+load_all()
+growthDataOneMissing <- growthDataOne#
+growthDataOneMissing$ODred[1:5] <- NA#
+#
+data <- growthDataOneMissing#
+fits <- linfit(growthDataOne,w_size=15,od_name="ODred",time_name="time")#
+fits#
+library(doParallel)#
+registerDoParallel()#
+getDoParWorkers()#
+getDoParName()#
+#
+system.time(five_fits <- dlply(growthDataFive,.(ID),linfit,w_size=15,od_name="ODred",time_name="time"))#
+system.time(five_fits <- dlply(growthDataFive,.(ID),linfit,w_size=15,od_name="ODred",time_name="time",.parallel=TRUE))#
+#
+(best <- pickfit(fits))
+plotfits(best,fits,data,od_name="ODred",time_name="time")
+data
+load_all()
+growthDataOneMissing <- growthDataOne#
+growthDataOneMissing$ODred[1:5] <- NA#
+#
+data <- growthDataOneMissing#
+fits <- linfit(growthDataOne,w_size=15,od_name="ODred",time_name="time")#
+fits
+(best <- pickfit(fits))
+plotfits(best,fits,data,od_name="ODred",time_name="time")
+bestfit
+bestfit <- best
+bestfit
+od_colnr <- which(colnames(data) == od_name)#
+  time_colnr <- which(colnames(data) == time_name)#
+  data <- data[with(data, order(data[,time_colnr])), ]#
+  nFits <- dim(bestfit)[1]
+nFits
+if (class(fits)=="data.frame"){#
+    fits$ID <- data$ID[1]#
+    best$ID <- data$ID[1]#
+    data$ID <- data$ID[1]  #
+  }
+sort(unique(data$ID))
+if (select == FALSE) {#
+    IDs <- sort(unique(data$ID))#
+  } else {#
+    IDs <- select#
+    data <- subset(data, ID %in% select)    #
+  }
+IDs
+nFits
+length(IDs)
+nFits != length(IDs)
+load_all()
+growthDataOneMissing <- growthDataOne#
+growthDataOneMissing$ODred[1:5] <- NA#
+#
+data <- growthDataOneMissing#
+fits <- linfit(growthDataOne,w_size=15,od_name="ODred",time_name="time")#
+fits
+(best <- pickfit(fits))
+plotfits(best,fits,data,od_name="ODred",time_name="time")
+load_all()
+growthDataOneMissing <- growthDataOne#
+growthDataOneMissing$ODred[1:5] <- NA#
+#
+data <- growthDataOneMissing#
+fits <- linfit(growthDataOne,w_size=15,od_name="ODred",time_name="time")#
+fits
+(best <- pickfit(fits))#
+#
+plotfits(best,fits,data,od_name="ODred",time_name="time")
+fits
+fits[[1]]
+?list
+list(fits)
+fits
+if (class(fits)=="data.frame"){#
+    fits <- list(fits)#
+    attr(fits,"split_labels") <- data$ID[1]#
+    bestfit$ID <- data$ID[1]#
+    data$ID <- data$ID[1]  #
+  }
+fits
+load_all()#
+#
+growthDataOneMissing <- growthDataOne#
+growthDataOneMissing$ODred[1:5] <- NA#
+#
+data <- growthDataOneMissing#
+fits <- linfit(growthDataOne,w_size=15,od_name="ODred",time_name="time")#
+fits
+(best <- pickfit(fits))
+plotfits(best,fits,data,od_name="ODred",time_name="time")
+load_all()#
+#
+growthDataOneMissing <- growthDataOne#
+growthDataOneMissing$ODred[1:5] <- NA#
+#
+data <- growthDataOneMissing#
+fits <- linfit(growthDataOne,w_size=15,od_name="ODred",time_name="time")#
+fits
+(best <- pickfit(fits))#
+#
+plotfits(best,fits,data,od_name="ODred",time_name="time")
+load_all()
+growthDataOneMissing <- growthDataOne#
+growthDataOneMissing$ODred[1:5] <- NA#
+#
+data <- growthDataOneMissing#
+fits <- linfit(growthDataOne,w_size=15,od_name="ODred",time_name="time")#
+fits#
+library(doParallel)#
+registerDoParallel()#
+getDoParWorkers()#
+getDoParName()#
+#
+system.time(five_fits <- dlply(growthDataFive,.(ID),linfit,w_size=15,od_name="ODred",time_name="time"))#
+system.time(five_fits <- dlply(growthDataFive,.(ID),linfit,w_size=15,od_name="ODred",time_name="time",.parallel=TRUE))#
+#
+(best <- pickfit(fits))
+plotfits(best,fits,data,od_name="ODred",time_name="time")
+best_five_fits <- ldply(five_fits,pickfit)
+plotfits(best_five_fits,five_fits,growthDataFive,od_name="ODred",time_name="time")
+plotfits(best_five_fits,five_fits,growthDataFive,od_name="ODred",time_name="time",interactive=FALSE)
+plotfits(best_five_fits,five_fits,growthDataFive,od_name="ODred",time_name="time",interactive=TRUE)
+data
+names(data_sub[,-od_colnr])
+mtext(paste(names(data_sub[,-c(od_colnr,time_colnr]),collapse="  |  "),side=3,line=0.5,cex=0.5)
+load_all()
+plotfits(best_five_fits,five_fits,growthDataFive,od_name="ODred",time_name="time",interactive=TRUE)
+load_all()
+plotfits(best_five_fits,five_fits,growthDataFive,od_name="ODred",time_name="time",interactive=TRUE)
+bestfit <- best_five_fits#
+fits <- five_fits#
+data <- growthDataFive#
+od_name <- "ODred"#
+time_name <- "time"#
+select <- FALSE
+od_colnr <- which(colnames(data) == od_name)#
+  time_colnr <- which(colnames(data) == time_name)#
+  data <- data[with(data, order(data[,time_colnr])), ]#
+  nFits <- dim(bestfit)[1]#
+#
+  if (class(fits)=="data.frame"){#
+    fits <- list(fits)#
+    attr(fits,"split_labels") <- data.frame(ID=data$ID[1])#
+    bestfit$ID <- data$ID[1]#
+    data$ID <- data$ID[1]#
+    interactive <- FALSE  #
+  }#
+#
+  if (select == FALSE) {#
+    IDs <- sort(unique(data$ID))#
+  } else {#
+    IDs <- select#
+    data <- subset(data, ID %in% select)    #
+  }
+interactive <- TRUE
+i
+i <- 1
+if (nFits != length(IDs)){stop("unequal dimensions of data and fits") }
+data_sub <- subset(data, ID == IDs[i])
+bestfit_sub <- subset(bestfit, ID == IDs[i])
+fits_sub <- fits[[as.numeric(rownames(subset(attr(fits,"split_labels"),ID==IDs[i])))]]
+par(mfrow=c(3,1))
+plot(data_sub[,time_colnr], log10(data_sub[,od_colnr]), xlab="time", ylab="OD600",type="b",main=data_sub$ID[1])
+mtext(paste(names(data_sub[-c(od_colnr,time_colnr),]),collapse="  |  "),side=3,line=0.5,cex=0.5)
+names(data_sub[-c(od_colnr,time_colnr),])
+names(data_sub[-c(od_colnr,time_colnr),])
+data_sub[-1,]
+data_sub[-100,]
+data_sub[-c(1:50),]
+data_sub[,-1]
+data_sub[,-od_colnr]
+od_colnr
+data_sub
+bestfit_sub
+load_all()
+plotfits(best_five_fits,five_fits,growthDataFive,od_name="ODred",time_name="time",interactive=TRUE)
+plotfits(best_five_fits,five_fits,growthDataFive,od_name="ODred",time_name="time",interactive=TRUE)
+load_all()
+plotfits(best_five_fits,five_fits,growthDataFive,od_name="ODred",time_name="time",interactive=TRUE)
+data_sub
+load_all()
+plotfits(best_five_fits,five_fits,growthDataFive,od_name="ODred",time_name="time",interactive=TRUE)
+load_all()
+plotfits(best_five_fits,five_fits,growthDataFive,od_name="ODred",time_name="time",interactive=TRUE)
+load_all()
+plotfits(best_five_fits,five_fits,growthDataFive,od_name="ODred",time_name="time",interactive=TRUE)
+load_all()
+plotfits(best_five_fits,five_fits,growthDataFive,od_name="ODred",time_name="time",interactive=TRUE)
+load_all()
+plotfits(best_five_fits,five_fits,growthDataFive,od_name="ODred",time_name="time",interactive=TRUE)
+load_all()
+plotfits(best_five_fits,five_fits,growthDataFive,od_name="ODred",time_name="time",interactive=TRUE)
+load_all()
+plotfits(best_five_fits,five_fits,growthDataFive,od_name="ODred",time_name="time",interactive=TRUE)
+load_all()
+plotfits(best_five_fits,five_fits,growthDataFive,od_name="ODred",time_name="time",interactive=TRUE)
+load_all()
+plotfits(best_five_fits,five_fits,growthDataFive,od_name="ODred",time_name="time",interactive=TRUE)
+load_all()
+plotfits(best_five_fits,five_fits,growthDataFive,od_name="ODred",time_name="time",interactive=TRUE)
+load_all()
+plotfits(best_five_fits,five_fits,growthDataFive,od_name="ODred",time_name="time",interactive=TRUE)
+load_all()
+plotfits(best_five_fits,five_fits,growthDataFive,od_name="ODred",time_name="time",interactive=TRUE)
+load_all()
+plotfits(best_five_fits,five_fits,growthDataFive,od_name="ODred",time_name="time",interactive=TRUE)
+?legend
+load_all()
+plotfits(best_five_fits,five_fits,growthDataFive,od_name="ODred",time_name="time",interactive=TRUE)
+load_all()
+plotfits(best_five_fits,five_fits,growthDataFive,od_name="ODred",time_name="time",interactive=TRUE)
+load_all()
+plotfits(best_five_fits,five_fits,growthDataFive,od_name="ODred",time_name="time",interactive=TRUE)
+load_all()
+plotfits(best_five_fits,five_fits,growthDataFive,od_name="ODred",time_name="time",interactive=TRUE)
+load_all()
+plotfits(best_five_fits,five_fits,growthDataFive,od_name="ODred",time_name="time",interactive=TRUE)
+load_all()
+plotfits(best_five_fits,five_fits,growthDataFive,od_name="ODred",time_name="time",interactive=TRUE)
+paste(c("a","b","c"),c(1,2,4))
+load_all()
+load_all()
+plotfits(best_five_fits,five_fits,growthDataFive,od_name="ODred",time_name="time",interactive=TRUE)
+load_all()
+plotfits(best_five_fits,five_fits,growthDataFive,od_name="ODred",time_name="time",interactive=TRUE)
+?legend
+plotfits(best_five_fits,five_fits,growthDataFive,od_name="ODred",time_name="time",interactive=TRUE)
+load_all()
+plotfits(best_five_fits,five_fits,growthDataFive,od_name="ODred",time_name="time",interactive=TRUE)
+load_all()
