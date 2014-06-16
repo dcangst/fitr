@@ -31,8 +31,6 @@
         <h1>
 <a name="fitr---growth-rate-fitting-in-r" class="anchor" href="#fitr---growth-rate-fitting-in-r"><span class="octicon octicon-link"></span></a>fitR - Growth Rate Fitting in R</h1>
 
-<p>very much work in progress &amp; an exercise in R development &amp; github.</p>
-
 <h2>
 <a name="goal" class="anchor" href="#goal"><span class="octicon octicon-link"></span></a>Goal:</h2>
 
@@ -42,50 +40,8 @@
 <li>growth/no growth identification</li>
 <li>minimize steps before fitting routine, ideally directly from plate reader data</li>
 <li>define easy to use data format for entry.</li>
-<li>
-<p>easy data handling</p>
-
-<p>input:  OD values, times, descriptors
-output: growthrates, quality indicators</p>
-
-<p>how much flexibility is desired? i.e. saving all fits for each curve?</p>
-</li>
-</ul><h2>
-<a name="ideas-for-fitting-function" class="anchor" href="#ideas-for-fitting-function"><span class="octicon octicon-link"></span></a>ideas for fitting function:</h2>
-
-<ol>
-<li>data prep -&gt; long form? list?
-
-<ul>
-<li>separate data prep function ('legacy' support)</li>
+<li>easy data handling</li>
 </ul>
-</li>
-<li>blanking
-
-<ul>
-<li>different methods?</li>
-</ul>
-</li>
-<li>loop for fitting
-
-<ul>
-<li>deciding on growth
-
-<ul>
-<li>different methods?</li>
-</ul>
-</li>
-<li>fitting if growth == TRUE</li>
-</ul>
-</li>
-<li>output raw data (as list, with element reflecting the options)
-
-<ul>
-<li>method to save csv from this list.</li>
-</ul>
-</li>
-<li>diagnostic plots</li>
-</ol>
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/dcangst">dcangst</a></p>
