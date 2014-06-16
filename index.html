@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Fitr by dcangst</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Fitr</h1>
+        <p>simple growth rate fitting package for R</p>
+
+        <p class="view"><a href="https://github.com/dcangst/fitr">View the Project on GitHub <small>dcangst/fitr</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/dcangst/fitr/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/dcangst/fitr/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/dcangst/fitr">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="fitr---growth-rate-fitting-in-r" class="anchor" href="#fitr---growth-rate-fitting-in-r"><span class="octicon octicon-link"></span></a>fitR - Growth Rate Fitting in R</h1>
+
+<h2>
+<a name="goal" class="anchor" href="#goal"><span class="octicon octicon-link"></span></a>Goal:</h2>
+
+<ul>
+<li>easy to use package to fit growth rates using a linear fit sliding window.</li>
+<li>well definitions for blanking</li>
+<li>growth/no growth identification</li>
+<li>minimize steps before fitting routine, ideally directly from plate reader data</li>
+<li>define easy to use data format for entry.</li>
+<li>
+<p>easy data handling</p>
+
+<p>input:  OD values, times, descriptors
+output: growthrates, quality indicators</p>
+
+<p>how much flexibility is desired? i.e. saving all fits for each curve?</p>
+</li>
+</ul><h2>
+<a name="outline-for-fitting-function" class="anchor" href="#outline-for-fitting-function"><span class="octicon octicon-link"></span></a>outline for fitting function:</h2>
+
+<ol>
+<li>data prep -&gt; long form? list?
+
+<ul>
+<li>separate data prep function ('legacy' support)</li>
+</ul>
+</li>
+<li>blanking
+
+<ul>
+<li>different methods?</li>
+</ul>
+</li>
+<li>loop for fitting
+
+<ul>
+<li>deciding on growth
+
+<ul>
+<li>different methods?</li>
+</ul>
+</li>
+<li>fitting if growth == TRUE</li>
+</ul>
+</li>
+<li>output raw data (as list, with element reflecting the options)
+
+<ul>
+<li>method to save csv from this list.</li>
+</ul>
+</li>
+<li>diagnostic plots</li>
+</ol>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/dcangst">dcangst</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
