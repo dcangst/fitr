@@ -11,9 +11,5 @@
 \description{
 prints description of data and best fits
 }
-\section{Output}{
-
-   output description
-}
-\keyword{keyword}
+\keyword{fitr}
 

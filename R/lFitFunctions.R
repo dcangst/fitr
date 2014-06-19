@@ -6,10 +6,10 @@
 #' @param w_size size of sliding window (number of datapoints)
 #' @param od_name name of column containing OD values
 #' @param time_name name of column containing times (in units after start of experiment)
-#' @param trafo Data transformation, one of "logNN0" (for log(N/N0)), "log" or "none".
+#' @param trafo Data transformation, one of \code{"logNN0"} (for log(N/N0) transformation), \code{"log"} or \code{"none"}.
 #' @section Output:
 #'    \code{data.frame} of with all fits for all possible windows
-#' @keywords growthcurve
+#' @keywords fitr, growthcurve
 #' @export
 gcfit	<-	function(data,w_size,od_name,time_name,trafo="logNN0") {
 
@@ -65,7 +65,7 @@ gcfit	<-	function(data,w_size,od_name,time_name,trafo="logNN0") {
 #' @param pearCutoff Only fits with a correlation coefficient higher than the cutoff are considered. Defaults to 0.95.
 #' @section Output:
 #'    \code{data.frame} with all fits from lfit
-#' @keywords growthcurve
+#' @keywords fitr, growthcurve
 #' @export
 pickfit <- function(fits,pearCutoff = 0.95) {
 
@@ -164,12 +164,11 @@ plotfit  <- function(bestfit,fits,data,od_name,time_name,select = FALSE,interact
 #' Wrapper function for automated growth curve fitting
 #' 
 #' @param data long-form data frame with growth data
-#' @param w_size size of sliding window (number of datapoints)
+#' @param w_size size of sliding window (number of datapoints considered)
 #' @param od_name name of column containing OD values
 #' @param time_name name of column containing times (in units after start of experiment)
-#' @param trafo Data transformation, one of "logNN0" (for log(N/N0)), "log" or "none".
-#' @param pearCutoff Only fits with a correlation coefficient higher than the cutoff are considered. Defaults to 0.95.
-#' @param method the method used to fit, at the moment only "lsw" for a linear sliding window fit.
+#' @param trafo Data transformation, one of \code{"logNN0"} (for log(N/N0)), \code{"log"} or \code{"none"}.
+#' @param pearCutoff Only fits with a correlation coefficient higher than the cutoff are considered. Defaults to \code{0.95}.
 #' @param parallel if \code{TRUE}, apply function in parallel, using parallel backend provided by \code{\link[foreach]{foreach}}.
 #' @param progress name of the progress bar to use, see \code{\link[plyr]{create_progress_bar}}
 #' @section Output:

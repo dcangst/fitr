@@ -17,5 +17,6 @@ pick the 'most valid' fit. This will be the fit with the highest mumax and a cor
 
    \code{data.frame} with all fits from lfit
 }
+\keyword{fitr,}
 \keyword{growthcurve}
 

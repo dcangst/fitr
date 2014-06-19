@@ -14,7 +14,7 @@ gcfit(data, w_size, od_name, time_name, trafo = "logNN0")
 
 \item{time_name}{name of column containing times (in units after start of experiment)}
 
-\item{trafo}{Data transformation, one of "logNN0" (for log(N/N0)), "log" or "none".}
+\item{trafo}{Data transformation, one of \code{"logNN0"} (for log(N/N0) transformation), \code{"log"} or \code{"none"}.}
 }
 \description{
 fits a model to growth data. Outputs all fits as a \code{data.frame}
@@ -23,5 +23,6 @@ fits a model to growth data. Outputs all fits as a \code{data.frame}
 
    \code{data.frame} of with all fits for all possible windows
 }
+\keyword{fitr,}
 \keyword{growthcurve}
 

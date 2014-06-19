@@ -9,17 +9,15 @@ agcfit(data, w_size, od_name, time_name, trafo = "logNN0",
 \arguments{
 \item{data}{long-form data frame with growth data}
 
-\item{w_size}{size of sliding window (number of datapoints)}
+\item{w_size}{size of sliding window (number of datapoints considered)}
 
 \item{od_name}{name of column containing OD values}
 
 \item{time_name}{name of column containing times (in units after start of experiment)}
 
-\item{trafo}{Data transformation, one of "logNN0" (for log(N/N0)), "log" or "none".}
+\item{trafo}{Data transformation, one of \code{"logNN0"} (for log(N/N0)), \code{"log"} or \code{"none"}.}
 
-\item{pearCutoff}{Only fits with a correlation coefficient higher than the cutoff are considered. Defaults to 0.95.}
-
-\item{method}{the method used to fit, at the moment only "lsw" for a linear sliding window fit.}
+\item{pearCutoff}{Only fits with a correlation coefficient higher than the cutoff are considered. Defaults to \code{0.95}.}
 
 \item{parallel}{if \code{TRUE}, apply function in parallel, using parallel backend provided by \code{\link[foreach]{foreach}}.}
 

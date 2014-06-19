@@ -3,9 +3,7 @@
 #' prints description of data and best fits
 #'
 #' @param object of class "fitr"
-#' @section Output:
-#'    output description
-#' @keywords keyword
+#' @keywords fitr
 #' @export
 print.fitr <- function(fitr){
   
@@ -45,9 +43,7 @@ print.fitr <- function(fitr){
 #' plots data and best fits
 #'
 #' @param object of class "fitr"
-#' @section Output:
-#'    output description
-#' @keywords keyword
+#' @keywords fitr
 #' @export
 plot.fitr <- function(fitr,interactive=TRUE,select=FALSE){
 
