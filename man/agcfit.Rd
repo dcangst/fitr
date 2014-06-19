@@ -3,8 +3,8 @@
 \alias{agcfit}
 \title{Wrapper function for automated growth curve fitting}
 \usage{
-agcfit(data, w_size, od_name, time_name, pearCutoff = 0.95, method = "lsw",
-  parallel = FALSE, progress = "text")
+agcfit(data, w_size, od_name, time_name, trafo = "logNN0",
+  pearCutoff = 0.95, parallel = FALSE, progress = "text")
 }
 \arguments{
 \item{data}{long-form data frame with growth data}
@@ -14,6 +14,8 @@ agcfit(data, w_size, od_name, time_name, pearCutoff = 0.95, method = "lsw",
 \item{od_name}{name of column containing OD values}
 
 \item{time_name}{name of column containing times (in units after start of experiment)}
+
+\item{trafo}{Data transformation, one of "logNN0" (for log(N/N0)), "log" or "none".}
 
 \item{pearCutoff}{Only fits with a correlation coefficient higher than the cutoff are considered. Defaults to 0.95.}
 
@@ -28,7 +30,7 @@ Wrapper function for automated growth curve fitting
 }
 \section{Output}{
 
-   none
+   an object of class fitr.
 }
 \keyword{growthcurve}
 

@@ -3,7 +3,7 @@
 \alias{gcfit}
 \title{fit growth curve}
 \usage{
-gcfit(data, w_size, od_name, time_name, method = "lsw")
+gcfit(data, w_size, od_name, time_name, trafo = "logNN0")
 }
 \arguments{
 \item{data}{long-form data frame with growth data}
@@ -14,7 +14,7 @@ gcfit(data, w_size, od_name, time_name, method = "lsw")
 
 \item{time_name}{name of column containing times (in units after start of experiment)}
 
-\item{method}{the method used to fit, at the moment only "lsw" for a linear sliding window fit.}
+\item{trafo}{Data transformation, one of "logNN0" (for log(N/N0)), "log" or "none".}
 }
 \description{
 fits a model to growth data. Outputs all fits as a \code{data.frame}

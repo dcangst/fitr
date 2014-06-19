@@ -17,7 +17,7 @@ plotfit(bestfit, fits, data, od_name, time_name, select = FALSE,
 
 \item{time_name}{name of column containing times (in units after start of experiment)}
 
-\item{select}{a vector containing IDs of a selection of fits to plot. Defaults to FALSE, showing all fits. IDs not found in \code{data} are quietly ignored.}
+\item{select}{a vector containing IDs of a selection of fits to plot. Defaults to \code{FALSE}, showing all fits. IDs not found in \code{data} are quietly ignored.}
 
 \item{interactive}{boolean; Should every plot be shown? Advance to next plot by clicking in plot area.}
 }

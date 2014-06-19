@@ -6,46 +6,53 @@
 #' @param w_size size of sliding window (number of datapoints)
 #' @param od_name name of column containing OD values
 #' @param time_name name of column containing times (in units after start of experiment)
-#' @param method the method used to fit, at the moment only "lsw" for a linear sliding window fit.
+#' @param trafo Data transformation, one of "logNN0" (for log(N/N0)), "log" or "none".
 #' @section Output:
 #'    \code{data.frame} of with all fits for all possible windows
 #' @keywords growthcurve
 #' @export
-gcfit	<-	function(data,w_size,od_name,time_name,method = "lsw") {
+gcfit	<-	function(data,w_size,od_name,time_name,trafo="logNN0") {
 
-  if (method == "lsw"){
     od_colnr <- which(colnames(data) == od_name)
     time_colnr <- which(colnames(data) == time_name)
   
     data <- data[with(data, order(data[,time_colnr])), ]
-    data$logODred <- log10(data[,od_colnr])
+
+    if(trafo=="logNN0"){
+      data$ODtrans <- log(data[,od_colnr]/data[1,od_colnr])
+    } else if (trafo=="log"){
+      data$ODtrans <- log(data[,od_colnr])
+    } else if (trafo=="none"){
+      data$ODtrans <- data[,od_colnr]
+    } else {
+      stop("invalid trafo argument!")
+    }
+    
     filler <- rep(NA,nrow(data)-w_size)
-    fits <- data.frame(minP=filler,nTime=filler,mumax=filler,intercept=filler,pearCoeff=filler,dt=filler, comment=filler)
-  
-  
+    fits <- data.frame(minP=filler,nTime=filler,mumax=filler,intercept=filler,pearCoeff=filler,dt=filler,maxOD=max(data$ODtrans),trafo=trafo, comment=filler)
+      
     for (i in 1:(nrow(data)-w_size)) {
   
           data_subset <- data[i:(i+w_size-1),]
           
-          if(length(na.omit(data_subset$logODred)) < w_size){
+          if(length(na.omit(data_subset$ODtrans)) < w_size){
             fits[i,]$minP <- i
             fits[i,]$comment <- "missing data!"
             next
           }
           
-          fit <- lm(data_subset$logODred ~ data_subset[,time_colnr],singular.ok=TRUE,na.action=na.omit)
+          fit <- lm(data_subset$ODtrans ~ data_subset[,time_colnr],singular.ok=TRUE,na.action=na.omit)
   
           fits[i,]$minP  <- i #N/minP
           fits[i,]$nTime <-  length(data[,time_colnr]) #number of timepoints in growthcurve
           fits[i,]$mumax  <- fit$coefficients[[2]] #mumax
           fits[i,]$intercept  <- fit$coefficients[[1]] #intercept
-          fits[i,]$pearCoeff  <- cor(1:w_size, data_subset$logODred) #pearCoeff
-          fits[i,]$dt  <- log(2,10)/fit$coefficients[[2]] #dt
+          fits[i,]$pearCoeff  <- cor(1:w_size, data_subset$ODtrans) #pearCoeff
+          fits[i,]$dt  <- log(2)/fit$coefficients[[2]] #dt
           fits[i,]$comment  <- "ok" # comment
          
       }
-  } # method == "lsw"
-     
+  #attr(fits,"trafo") <- trafo   
   return(fits)
 
 } # fn:lfit
@@ -116,6 +123,16 @@ plotfit  <- function(bestfit,fits,data,od_name,time_name,select = FALSE,interact
     bestfit_sub <- subset(bestfit, ID == IDs[i])
     fits_sub <- fits[[as.numeric(rownames(subset(attr(fits,"split_labels"),ID==IDs[i])))]]
 
+    if(bestfit_sub$trafo=="logNN0"){
+      data_sub$ODtrans <- log(data_sub[,od_colnr]/data_sub[1,od_colnr])
+    } else if (bestfit_sub$trafo=="log"){
+      data_sub$ODtrans <- log(data_sub[,od_colnr])
+    } else if (bestfit_sub$trafo=="none"){
+      data_sub$ODtrans <- data_sub[,od_colnr]
+    } else {
+      stop("invalid trafo argument!")
+    }
+
     par(mfrow=c(2,1),oma=c(0,0,0,1),mar=c(4,4,4,0),mgp=c(3,1,0))
     printMain <- paste0(names(data_sub[,-c(od_colnr,time_colnr)]),
                        c(" = "),
@@ -123,11 +140,7 @@ plotfit  <- function(bestfit,fits,data,od_name,time_name,select = FALSE,interact
                        collapse=" | "
                        )
 
-    plot(data_sub[,time_colnr], log10(data_sub[,od_colnr]), xlab="time", ylab="OD600",type="b",main=printMain)
-    #mtext(paste(names(data_sub[,-c(od_colnr,time_colnr)]),collapse="  |  "),side=3,line=1.5,cex=0.5)
-    #mtext(paste(data_sub[1,-c(od_colnr,time_colnr)],collapse="  |  "),side=3,line=0.5,cex=0.5)
-    #mtext(paste(names(bestfit_sub),collapse=" | "),side=1,line=4,cex=0.5)
-    #mtext(paste(bestfit_sub,collapse=" | "),side=1,line=5,cex=0.5)
+    plot(data_sub[,time_colnr], data_sub$ODtrans, xlab="time", ylab="OD600",type="b",main=printMain)
     abline(a=bestfit_sub$intercept ,b=bestfit_sub$mumax,col="red")
     printParams <- paste(
                     c("intercept =","mumax =", "dt =", "Pears. R ="),
@@ -138,8 +151,7 @@ plotfit  <- function(bestfit,fits,data,od_name,time_name,select = FALSE,interact
     plot(fits_sub$minP,fits_sub$mumax,col=color,xlab="sliding window start point",ylab="mumax")
     legend("topright",legend="color: Pears. R")
     points(bestfit_sub$minP,bestfit_sub$mumax,col="blue",pch=8,cex=1.5)
-    #plot(fits_sub$minP,fits_sub$pearCoeff,col=color,xlab="sliding window start point",ylab="Pearsons correlation coefficient")
-    #points(bestfit_sub$minP,bestfit_sub$pearCoeff,col="blue",pch=8,cex=1.5)
+   
     if(interactive){
       cat("Showing Plot ",i," of ",nFits," (ID = ",IDs[i],"). Click in plot area for next plot.","\n",sep="")
       locator(1)
@@ -155,6 +167,7 @@ plotfit  <- function(bestfit,fits,data,od_name,time_name,select = FALSE,interact
 #' @param w_size size of sliding window (number of datapoints)
 #' @param od_name name of column containing OD values
 #' @param time_name name of column containing times (in units after start of experiment)
+#' @param trafo Data transformation, one of "logNN0" (for log(N/N0)), "log" or "none".
 #' @param pearCutoff Only fits with a correlation coefficient higher than the cutoff are considered. Defaults to 0.95.
 #' @param method the method used to fit, at the moment only "lsw" for a linear sliding window fit.
 #' @param parallel if \code{TRUE}, apply function in parallel, using parallel backend provided by \code{\link[foreach]{foreach}}.
@@ -163,7 +176,7 @@ plotfit  <- function(bestfit,fits,data,od_name,time_name,select = FALSE,interact
 #'    an object of class fitr.
 #' @keywords growthcurve
 #' @export
-agcfit <- function(data,w_size,od_name,time_name,pearCutoff=0.95,method = "lsw",parallel=FALSE,progress="text"){
+agcfit <- function(data,w_size,od_name,time_name,trafo="logNN0",pearCutoff=0.95,parallel=FALSE,progress="text"){
  
   if (parallel) {
     doParallel::registerDoParallel()
@@ -171,7 +184,7 @@ agcfit <- function(data,w_size,od_name,time_name,pearCutoff=0.95,method = "lsw",
   
   cat("fitting growth curves...","\n"); flush.console()
 
-  fits <- plyr::dlply(data,.(ID),gcfit,w_size=15,od_name=od_name,time_name=time_name,method = "lsw",.parallel=parallel,.progress=progress)
+  fits <- plyr::dlply(data,.(ID),gcfit,w_size=15,od_name=od_name,time_name=time_name,trafo=trafo,.parallel=parallel,.progress=progress)
 
   cat("selecting best fits...","\n"); flush.console()
 
@@ -184,6 +197,7 @@ agcfit <- function(data,w_size,od_name,time_name,pearCutoff=0.95,method = "lsw",
                           od_name,
                           time_name,
                           pearCutoff,
+                          trafo,
                           stringsAsFactors=FALSE
                          )
 
