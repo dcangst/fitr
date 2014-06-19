@@ -18,7 +18,7 @@ gcfit	<-	function(data,w_size,od_name,time_name,method = "lsw") {
     time_colnr <- which(colnames(data) == time_name)
   
     data <- data[with(data, order(data[,time_colnr])), ]
-     data$logODred <- log10(data[,od_colnr])
+    data$logODred <- log10(data[,od_colnr])
     filler <- rep(NA,nrow(data)-w_size)
     fits <- data.frame(minP=filler,nTime=filler,mumax=filler,intercept=filler,pearCoeff=filler,dt=filler, comment=filler)
   
@@ -31,7 +31,6 @@ gcfit	<-	function(data,w_size,od_name,time_name,method = "lsw") {
             fits[i,]$minP <- i
             fits[i,]$comment <- "missing data!"
             next
-  
           }
           
           fit <- lm(data_subset$logODred ~ data_subset[,time_colnr],singular.ok=TRUE,na.action=na.omit)
