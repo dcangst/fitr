@@ -1,5 +1,5 @@
 #' fitr.
-#' A package containing tools for growth rate fitting of many growtcurves.
+#' A package containing tools for growth rate fitting of many growthcurves.
 #' @name fitr
 #' @docType package
 #' @import plyr

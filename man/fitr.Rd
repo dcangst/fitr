@@ -4,9 +4,9 @@
 \alias{fitr}
 \alias{fitr-package}
 \title{fitr.
-A package containing tools for growth rate fitting of many growtcurves.}
+A package containing tools for growth rate fitting of many growthcurves.}
 \description{
 fitr.
-A package containing tools for growth rate fitting of many growtcurves.
+A package containing tools for growth rate fitting of many growthcurves.
 }
 
