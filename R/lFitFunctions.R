@@ -59,7 +59,7 @@ gcfit	<-	function(data,w_size,od_name,time_name,trafo="logNN0") {
 #' @export
 pickfit <- function(fits,pearCutoff = 0.95) {
 
-    fits <- fits[fits$pearCoeff>=pearCutoff,]
+    fits <- fits[fits$pearCoeff>=pearCutoff & is.na(fits$pearCoeff)==FALSE,]
     best <- fits[fits$mumax==max(fits$mumax,na.rm=TRUE),]
     return(best)
 
