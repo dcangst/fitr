@@ -7,7 +7,7 @@
 #' @export
 print.fitr <- function(fitr){
   
-  datasum <- ldply(ffa$fits,summarize,minT=min(nTime),maxT=max(nTime))
+  datasum <- ldply(fitr$fits,summarize,minT=min(nTime),maxT=max(nTime))
   if (length(datasum$ID)>20) {
     IDs <- paste0(paste0(head(datasum$ID,5),collapse=", ")," .. ",paste0(tail(datasum$ID,5),collapse=", "))
   } else {

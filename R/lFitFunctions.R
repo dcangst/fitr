@@ -15,18 +15,20 @@ gcfit	<-	function(data,w_size,od_name,time_name,trafo="logNN0") {
 
     od_colnr <- which(colnames(data) == od_name)
     time_colnr <- which(colnames(data) == time_name)
-  
-    data <- data[with(data, order(data[,time_colnr])), ]
+    
+    data <- .gcDataTrafo(data,od_colnr,time_colnr,trafo)
 
-    if(trafo=="logNN0"){
-      data$ODtrans <- log(data[,od_colnr]/data[1,od_colnr])
-    } else if (trafo=="log"){
-      data$ODtrans <- log(data[,od_colnr])
-    } else if (trafo=="none"){
-      data$ODtrans <- data[,od_colnr]
-    } else {
-      stop("invalid trafo argument!")
-    }
+    #data <- data[with(data, order(data[,time_colnr])), ]
+#
+    #if(trafo=="logNN0"){
+    #  data$ODtrans <- log(data[,od_colnr]/data[1,od_colnr])
+    #} else if (trafo=="log"){
+    #  data$ODtrans <- log(data[,od_colnr])
+    #} else if (trafo=="none"){
+    #  data$ODtrans <- data[,od_colnr]
+    #} else {
+    #  stop("invalid trafo argument!")
+    #}
     
     filler <- rep(NA,nrow(data)-w_size)
     fits <- data.frame(minP=filler,nTime=filler,mumax=filler,intercept=filler,pearCoeff=filler,dt=filler,maxOD=max(data$ODtrans),trafo=trafo, comment=filler)
@@ -123,16 +125,18 @@ plotfit  <- function(bestfit,fits,data,od_name,time_name,select = FALSE,interact
     bestfit_sub <- subset(bestfit, ID == IDs[i])
     fits_sub <- fits[[as.numeric(rownames(subset(attr(fits,"split_labels"),ID==IDs[i])))]]
 
-    if(bestfit_sub$trafo=="logNN0"){
-      data_sub$ODtrans <- log(data_sub[,od_colnr]/data_sub[1,od_colnr])
-    } else if (bestfit_sub$trafo=="log"){
-      data_sub$ODtrans <- log(data_sub[,od_colnr])
-    } else if (bestfit_sub$trafo=="none"){
-      data_sub$ODtrans <- data_sub[,od_colnr]
-    } else {
-      stop("invalid trafo argument!")
-    }
+    data_sub <- .gcDataTrafo(data_sub,od_colnr,time_colnr,bestfit_sub$trafo)
 
+    #if(bestfit_sub$trafo=="logNN0"){
+    #  data_sub$ODtrans <- log(data_sub[,od_colnr]/data_sub[1,od_colnr])
+    #} else if (bestfit_sub$trafo=="log"){
+    #  data_sub$ODtrans <- log(data_sub[,od_colnr])
+    #} else if (bestfit_sub$trafo=="none"){
+    #  data_sub$ODtrans <- data_sub[,od_colnr]
+    #} else {
+    #  stop("invalid trafo argument!")
+    #}
+#
     par(mfrow=c(2,1),oma=c(0,0,0,1),mar=c(4,4,4,0),mgp=c(3,1,0))
     printMain <- paste0(names(data_sub[,-c(od_colnr,time_colnr)]),
                        c(" = "),
