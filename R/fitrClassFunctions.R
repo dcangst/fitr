@@ -7,7 +7,7 @@
 #' @export
 print.fitr <- function(fitr){
   
-  datasum <- ldply(fitr$fits,summarize,minT=min(nTime,na.rm=TRUE),maxT=max(nTime,na.rm=TRUE))
+  datasum <- plyr::ldply(fitr$fits,summarize,minT=min(nTime,na.rm=TRUE),maxT=max(nTime,na.rm=TRUE))
   if (length(datasum$ID)>20) {
     IDs <- paste0(paste0(head(datasum$ID,5),collapse=", ")," .. ",paste0(tail(datasum$ID,5),collapse=", "))
   } else {
@@ -34,7 +34,7 @@ print.fitr <- function(fitr){
   cat("failed fits:","\n")
   print(fitr$bestfits[fitr$bestfits$comment != "ok",c(1,11)])
   cat("\n")
-  
+
   cat("$fits:","\n")
   cat("\t", "list of all fits for each growthcurve")
   cat("\n")
