@@ -2,7 +2,7 @@
 
 S3method(plot,fitr)
 S3method(print,fitr)
-export(agcfit)
+export(d_gcfit)
 export(gcfit)
 export(pickfit)
 export(plotfit)

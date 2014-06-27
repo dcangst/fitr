@@ -3,7 +3,7 @@
 \alias{gcfit}
 \title{fit growth curve}
 \usage{
-gcfit(data, w_size, od_name, time_name, trafo = "logNN0")
+gcfit(data, w_size, od_name, time_name, trafo = "log")
 }
 \arguments{
 \item{data}{long-form data frame with growth data}
