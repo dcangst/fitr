@@ -7,7 +7,7 @@
 #' @export
 print.fitr <- function(fitr){
   
-  datasum <- ldply(fitr$fits,summarize,minT=min(nTime),maxT=max(nTime))
+  datasum <- ldply(fitr$fits,summarize,minT=min(nTime,na.rm=TRUE),maxT=max(nTime,na.rm=TRUE))
   if (length(datasum$ID)>20) {
     IDs <- paste0(paste0(head(datasum$ID,5),collapse=", ")," .. ",paste0(tail(datasum$ID,5),collapse=", "))
   } else {
@@ -18,7 +18,7 @@ print.fitr <- function(fitr){
   cat("\n")
 
   cat("$data","\n")
-  cat("\t",length(datasum$ID),"growthcurves with ",min(datasum$minT), " to ", max(datasum$maxT), "timepoints")
+  cat("\t",length(datasum$ID),"growthcurves with ",min(datasum$minT,na.rm=TRUE), " to ", max(datasum$maxT,na.rm=TRUE), "timepoints")
   cat("\n")
 
   cat("\t","Growthcurve IDs: ",IDs,"\n")
@@ -29,7 +29,10 @@ print.fitr <- function(fitr){
   cat("\n")
 
   cat("$bestfits:","\n")
-  print(fitr$bestfits)
+  print(fitr$bestfits[,1:10])
+  cat("\n")
+  cat("failed fits:","\n")
+  print(fitr$bestfits[fitr$bestfits$comment != "ok",c(1,11)])
   cat("\n")
   
   cat("$fits:","\n")

@@ -1,6 +1,6 @@
 #' transform OD values
 #'
-#' internal function to transform od values
+#' internal function to transform od values. -Inf, NaN values are replaced with NA.
 #'
 #' @param data
 #' @param od_colnr
@@ -23,6 +23,26 @@
     stop("invalid trafo argument!")
   }
 
+  data$ODtrans[!is.finite(data$ODtrans)] <- NA
+
   return(data)
+
+}
+#' generate color gradient 
+#'
+#' with colors from blue(low) to red(high)
+#' NA get the same color as the lowest value.
+#'
+#' @param x a numeric vector
+#' @section Output:
+#'    character vector with colors
+#' @keywords fitr
+.rgbColorGradient <- function(x){
+
+  x <- x + abs(min(x,na.rm=TRUE))
+  x[is.na(x)] <- 0
+
+  color <- rgb((x-min(x, na.rm=TRUE))/(max(x, na.rm=TRUE)-min(x, na.rm=TRUE)),0,1-(x-min(x, na.rm=TRUE))/(max(x, na.rm=TRUE)-min(x, na.rm=TRUE)))
+  return(color)
 
 }
