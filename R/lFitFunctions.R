@@ -103,7 +103,7 @@ pickfit <- function(fits,min_numP,RsqCutoff = 0.95) {
 #'    none
 #' @keywords growthcurve
 #' @export
-plotfit  <- function(bestfit,fits,data,od_name,time_name,select = FALSE,interactive = TRUE) {
+plot_fitr  <- function(bestfit,fits,data,od_name,time_name,select = FALSE,interactive = TRUE) {
 	od_colnr <- which(colnames(data) == od_name)
   time_colnr <- which(colnames(data) == time_name)
 
@@ -136,7 +136,7 @@ plotfit  <- function(bestfit,fits,data,od_name,time_name,select = FALSE,interact
       cat("Showing Plot ",i," of ",nFits," (ID = ",IDs[i],"). Click in plot area for next plot.","\n",sep="")
       locator(1)
     }
-    
+
     data_sub <- subset(data, ID == IDs[i]) 
     bestfit_sub <- subset(bestfit, ID == IDs[i])
     if(bestfit_sub$comment != "ok"){
