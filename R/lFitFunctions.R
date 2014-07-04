@@ -132,10 +132,25 @@ plotfit  <- function(bestfit,fits,data,od_name,time_name,select = FALSE,interact
 
   for (i in 1:nFits){
     
+    if(interactive){
+      cat("Showing Plot ",i," of ",nFits," (ID = ",IDs[i],"). Click in plot area for next plot.","\n",sep="")
+      locator(1)
+    }
+    
     data_sub <- subset(data, ID == IDs[i]) 
     bestfit_sub <- subset(bestfit, ID == IDs[i])
+    if(bestfit_sub$comment != "ok"){
+      par(mfrow=c(2,1),oma=c(0,0,0,1),mar=c(4,4,4,0),mgp=c(3,1,0))
+      printMain <- paste0(names(data_sub[,-c(od_colnr,time_colnr)]),
+                       c(" = "),
+                       data_sub[1,-c(od_colnr,time_colnr)],
+                       collapse=" | "
+                       )
+      plot(1,1)
+      plot(1,1)
+      next
+    }
     fits_sub <- fits[[as.numeric(rownames(subset(attr(fits,"split_labels"),ID==IDs[i])))]]
-
     data_sub <- .gcDataTrafo(data_sub,od_colnr,time_colnr,bestfit_sub$trafo)
 
     par(mfrow=c(2,1),oma=c(0,0,0,1),mar=c(4,4,4,0),mgp=c(3,1,0))
@@ -157,10 +172,7 @@ plotfit  <- function(bestfit,fits,data,od_name,time_name,select = FALSE,interact
     legend("topright",legend="color: adj. R squared")
     points(bestfit_sub$minP,bestfit_sub$mumax,col="blue",pch=8,cex=1.5)
    
-    if(interactive){
-      cat("Showing Plot ",i," of ",nFits," (ID = ",IDs[i],"). Click in plot area for next plot.","\n",sep="")
-      locator(1)
-    }  
+
   }
   cat("done.","\n")
 
