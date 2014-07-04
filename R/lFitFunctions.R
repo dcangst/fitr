@@ -134,7 +134,6 @@ plot_fitr  <- function(bestfit,fits,data,od_name,time_name,select = FALSE,intera
     
     if(interactive){
       cat("Showing Plot ",i," of ",nFits," (ID = ",IDs[i],"). Click in plot area for next plot.","\n",sep="")
-      locator(1)
     }
 
     data_sub <- subset(data, ID == IDs[i]) 
@@ -172,7 +171,7 @@ plot_fitr  <- function(bestfit,fits,data,od_name,time_name,select = FALSE,intera
     legend("topright",legend="color: adj. R squared")
     points(bestfit_sub$minP,bestfit_sub$mumax,col="blue",pch=8,cex=1.5)
    
-
+    if(interactive){locator(1)}    }
   }
   cat("done.","\n")
 
