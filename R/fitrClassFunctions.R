@@ -50,7 +50,7 @@ print.fitr <- function(fitr){
 #' @export
 plot.fitr <- function(fitr,interactive=TRUE,select=FALSE){
 
-  plotfit(bestfit=fitr$bestfits,
+  plot_fitr(bestfit=fitr$bestfits,
           fits=fitr$fits,
           data=fitr$data,
           od_name=fitr$parameter$od_name,
