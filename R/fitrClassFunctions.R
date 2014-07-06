@@ -43,12 +43,12 @@ print.fitr <- function(fitr){
 
 #' plot function for class "fitr"
 #'
-#' plots data and best fits
+#' plots data and best fits, a wrapper for \code{\link{plot_fitr}}
 #'
 #' @param object of class "fitr"
 #' @keywords fitr
 #' @export
-plot.fitr <- function(fitr,interactive=TRUE,select=FALSE){
+plot.fitr <- function(fitr,interactive=TRUE,select=FALSE,sample_size=5){
 
   plot_fitr(bestfit=fitr$bestfits,
           fits=fitr$fits,
@@ -56,6 +56,7 @@ plot.fitr <- function(fitr,interactive=TRUE,select=FALSE){
           od_name=fitr$parameter$od_name,
           time_name=fitr$parameter$time_name,
           interactive=interactive,
-          select=select)
+          select=select,
+          sample_size=sample_size)
 
 }

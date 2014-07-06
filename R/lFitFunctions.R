@@ -79,6 +79,7 @@ pickfit <- function(fits,min_numP,RsqCutoff = 0.95) {
     if(comment != "ok"){
       best <- fits[1,]
       best[] <- NA
+      best$trafo <- fits[1,]$trafo
       best$comment <- comment
     } else {
       best <- fits_rsqC[fits_rsqC$mumax==max(fits_rsqC$mumax,na.rm=TRUE),]
@@ -97,18 +98,19 @@ pickfit <- function(fits,min_numP,RsqCutoff = 0.95) {
 #' @param data long-form data frame with growth data
 #' @param od_name name of column containing OD values
 #' @param time_name name of column containing times (in units after start of experiment)
-#' @param select a vector containing IDs of a selection of fits to plot. Defaults to \code{FALSE}, showing all fits. IDs not found in \code{data} are quietly ignored.
+#' @param select Either a vector containing IDs of a selection of fits to plot (IDs not found in \code{data} are quietly ignored), or one of \code{c("sample","sampleQ","failed")}. \code{"sample"} will draw an uniform sample of size \code{sample_size}. \code{"sampleQ"} will draw a total (rounded) of \code{sample_size} samples split over growthrate (mumax) sample quantiles. \code{"failed"} will display fits were no best fit could be selected.  Defaults to \code{FALSE}, showing all fits.
 #' @param interactive boolean; Should every plot be shown? Advance to next plot by clicking in plot area.
 #' @section Output:
 #'    none
 #' @keywords growthcurve
 #' @export
-plot_fitr  <- function(bestfit,fits,data,od_name,time_name,select = FALSE,interactive = TRUE) {
+plot_fitr  <- function(bestfit,fits,data,od_name,time_name,interactive = TRUE,select = FALSE,sample_size=5) {
 	od_colnr <- which(colnames(data) == od_name)
   time_colnr <- which(colnames(data) == time_name)
 
   data <- data[with(data, order(data[,time_colnr])), ]
   
+  ### single growht curve
   if (class(fits)=="data.frame"){
     fits <- list(fits)
     attr(fits,"split_labels") <- data.frame(ID=data$ID[1])
@@ -117,13 +119,52 @@ plot_fitr  <- function(bestfit,fits,data,od_name,time_name,select = FALSE,intera
     interactive <- FALSE  
   }
 
+  ### Selection
   if (is.logical(select)) {
     IDs <- sort(unique(data$ID))
   } else {
-    cat("Selected IDs for plotting: ",paste0(select,collapse=", "),"\n",sep="")
-    data <- subset(data, ID %in% select)
-    bestfit <- subset(bestfit, ID %in% select)
-    IDs <- sort(unique(data$ID))    
+    if (select[1]=="sample"){
+      cat("Selecting ",sample_size," (",sample_size/length(bestfit$ID),"%) samples...","\n",sep="")
+      samples <- sample(bestfit$ID,sample_size)
+      cat("Selected IDs for plotting: ",paste0(samples,collapse=", "),"\n",sep="")
+      data <- subset(data, ID %in% samples)
+      bestfit <- subset(bestfit, ID %in% samples)
+      IDs <- sort(unique(data$ID))
+    } else if (select[1]=="failed"){
+      failed <- subset(bestfit, comment != "ok")
+      select <- sort(failed$ID)
+      cat("Selecting failed fits... (",length(select)," of ",length(bestfit$ID),", ",length(select)/length(bestfit$ID),"%)","\n",sep="")
+      data <- subset(data, ID %in% select)
+      bestfit <- subset(bestfit, ID %in% select)
+      IDs <- sort(unique(data$ID))
+    } else if (select[1]=="sampleQ") {
+      quantiles <- boxplot.stats(bestfit$mumax)$stats
+      minID   <- na.omit(bestfit$ID[bestfit$mumax==quantiles[1]])
+      maxID   <- na.omit(bestfit$ID[bestfit$mumax==quantiles[5]])
+      lowIDs  <- sample(na.omit(bestfit$ID[bestfit$mumax>quantiles[1] & bestfit$mumax<quantiles[2]]),ceiling((sample_size-2)/3))
+      meanIDs <- sample(na.omit(bestfit$ID[bestfit$mumax>quantiles[2] & bestfit$mumax<quantiles[4]]),ceiling((sample_size-2)/3))
+      highIDs <- sample(na.omit(bestfit$ID[bestfit$mumax>quantiles[4] & bestfit$mumax<quantiles[5]]),ceiling((sample_size-2)/3))
+      cat("Selected IDs for plotting: ","\n",sep="")
+      cat("Min: ")
+      cat(paste0(as.vector(minID),collapse=", "),"\n")
+      cat("low sample (below 1st quantile): ")
+      cat(paste0(lowIDs,collapse=", "),"\n")
+      cat("mean sample (btw. 1st & 3rd quantile): ")
+      cat(paste0(meanIDs,collapse=", "),"\n")
+      cat("high sample (above 3rd quantile): ")
+      cat(paste0(highIDs,collapse=", "),"\n")
+      cat("Max: ")
+      cat(paste0(as.vector(maxID),collapse=", "),"\n")
+      samples <- c(minID,lowIDs,meanIDs,highIDs,maxID)
+      data <- subset(data, ID %in% samples)
+      bestfit <- subset(bestfit, ID %in% samples)
+      IDs <- unique(data$ID)
+    } else {
+      cat("Selected IDs for plotting: ",paste0(select,collapse=", "),"\n",sep="")
+      data <- subset(data, ID %in% select)
+      bestfit <- subset(bestfit, ID %in% select)
+      IDs <- sort(unique(data$ID))
+    }      
   } 
 
   nFits <- dim(bestfit)[1]
@@ -132,13 +173,15 @@ plot_fitr  <- function(bestfit,fits,data,od_name,time_name,select = FALSE,intera
 
   for (i in 1:nFits){
     
+    data_sub <- subset(data, ID == IDs[i])
+    fits_sub <- fits[[as.numeric(rownames(subset(attr(fits,"split_labels"),ID==IDs[i])))]]
+    bestfit_sub <- subset(bestfit, ID == IDs[i])
+    data_sub <- .gcDataTrafo(data_sub,od_colnr,time_colnr,bestfit_sub$trafo)
+
     if(interactive){
-      cat("Showing Plot ",i," of ",nFits," (ID = ",IDs[i],"). Click in plot area for next plot.","\n",sep="")
+      cat("Fit ",i," of ",nFits," (ID = ",IDs[i],"). ",bestfit_sub$comment,". Click in plot area for next plot.","\n",sep="")
     }
 
-    data_sub <- subset(data, ID == IDs[i]) 
-    bestfit_sub <- subset(bestfit, ID == IDs[i])
-    
     if(bestfit_sub$comment != "ok"){
       par(mfrow=c(2,1),oma=c(0,0,0,1),mar=c(4,4,4,0),mgp=c(3,1,0))
       printMain <- paste0(names(data_sub[,-c(od_colnr,time_colnr)]),
@@ -146,13 +189,12 @@ plot_fitr  <- function(bestfit,fits,data,od_name,time_name,select = FALSE,intera
                        data_sub[1,-c(od_colnr,time_colnr)],
                        collapse=" | "
                        )
+      plot(data_sub[,time_colnr], data_sub$ODtrans, xlab="time", ylab="OD",type="b",main=printMain)
+      legend("bottomright",legend=bestfit_sub$comment,xjust=0.5, title="no best Fit:",text.col="red")
       plot(1,1)
-      plot(1,1)
+      if(interactive){locator(1)}
       next
     }
-
-    fits_sub <- fits[[as.numeric(rownames(subset(attr(fits,"split_labels"),ID==IDs[i])))]]
-    data_sub <- .gcDataTrafo(data_sub,od_colnr,time_colnr,bestfit_sub$trafo)
 
     par(mfrow=c(2,1),oma=c(0,0,0,1),mar=c(4,4,4,0),mgp=c(3,1,0))
     printMain <- paste0(names(data_sub[,-c(od_colnr,time_colnr)]),
@@ -161,7 +203,7 @@ plot_fitr  <- function(bestfit,fits,data,od_name,time_name,select = FALSE,intera
                        collapse=" | "
                        )
 
-    plot(data_sub[,time_colnr], data_sub$ODtrans, xlab="time", ylab="OD600",type="b",main=printMain)
+    plot(data_sub[,time_colnr], data_sub$ODtrans, xlab="time", ylab="OD",type="b",main=printMain)
     abline(a=bestfit_sub$intercept ,b=bestfit_sub$mumax,col="red")
     printParams <- paste(
                     c("intercept =","mumax =", "dt =", "Pears. R ="),

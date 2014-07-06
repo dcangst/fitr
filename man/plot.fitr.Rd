@@ -3,13 +3,14 @@
 \alias{plot.fitr}
 \title{plot function for class "fitr"}
 \usage{
-\method{plot}{fitr}(fitr, interactive = TRUE, select = FALSE)
+\method{plot}{fitr}(fitr, interactive = TRUE, select = FALSE,
+  sample_size = 5)
 }
 \arguments{
 \item{object}{of class "fitr"}
 }
 \description{
-plots data and best fits
+plots data and best fits, a wrapper for \code{\link{plot_fitr}}
 }
 \keyword{fitr}
 
