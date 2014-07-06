@@ -8,6 +8,9 @@
 print.fitr <- function(fitr){
   
   datasum <- plyr::ldply(fitr$fits,summarize,minT=min(nTime,na.rm=TRUE),maxT=max(nTime,na.rm=TRUE))
+  failN <- dim(fitr$bestfits[fitr$bestfits$comment != "ok",c(1,11)])[1]
+  failPercent <- dim(fitr$bestfits[fitr$bestfits$comment != "ok",c(1,11)])[1]/length(datasum$ID)
+
   if (length(datasum$ID)>20) {
     IDs <- paste0(paste0(head(datasum$ID,5),collapse=", ")," .. ",paste0(tail(datasum$ID,5),collapse=", "))
   } else {
@@ -18,10 +21,12 @@ print.fitr <- function(fitr){
   cat("\n")
 
   cat("$data","\n")
-  cat("\t",length(datasum$ID),"growthcurves with ",min(datasum$minT,na.rm=TRUE), " to ", max(datasum$maxT,na.rm=TRUE), "timepoints")
+  cat("\t",length(datasum$ID)," growthcurves with ",min(datasum$minT,na.rm=TRUE), " to ", max(datasum$maxT,na.rm=TRUE), "timepoints",sep="")
+  cat("\n")
+  cat("\t","No valid fit for ",failN, " out of ",length(datasum$ID)," (",failPercent,"%) curves.",sep="")
   cat("\n")
 
-  cat("\t","Growthcurve IDs: ",IDs,"\n")
+  cat("\t","Growthcurve IDs: ",IDs,"\n",sep="")
   cat("\n")
 
   cat("$parameter:","\n")
@@ -31,7 +36,7 @@ print.fitr <- function(fitr){
   cat("$bestfits:","\n")
   print(fitr$bestfits[,1:10])
   cat("\n")
-  cat("failed fits:","\n")
+  cat("failed fits","\n")
   print(fitr$bestfits[fitr$bestfits$comment != "ok",c(1,11)])
   cat("\n")
 
