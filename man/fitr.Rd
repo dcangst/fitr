@@ -6,7 +6,11 @@
 \title{fitr.
 A package containing tools for growth rate fitting of many growthcurves.}
 \description{
-fitr.
-A package containing tools for growth rate fitting of many growthcurves.
+\code{\link{gcfit}}
+\code{\link{pickfit}}
+\code{\link{plot_fitr}}
+\code{\link{d_gcfit}}
+\code{\link{print.fitr}}
+\code{\link{plot.fitr}}
 }
 
