@@ -23,5 +23,6 @@ A dataset containing five growth curve
   \item ODred. blank corrected OD measurements
 }
 }
-\keyword{datasets}
+\keyword{datasets,}
+\keyword{fitr}
 

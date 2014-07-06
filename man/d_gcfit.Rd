@@ -32,5 +32,6 @@ Wrapper function for automated growth curve fitting
 
    an object of class fitr.
 }
+\keyword{fitr,}
 \keyword{growthcurve}
 

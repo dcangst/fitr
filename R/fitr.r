@@ -1,5 +1,14 @@
 #' fitr.
 #' A package containing tools for growth rate fitting of many growthcurves.
+#' 
+#' 
+#'
+#' 
+#'  
+#'
+#' 
+#'  
+#'
 #' @name fitr
 #' @docType package
 #' @import plyr
@@ -23,7 +32,7 @@ NULL
 #' }
 #' 
 #' @docType data
-#' @keywords datasets
+#' @keywords datasets, fitr
 #' @name growthDataOne
 #' @usage data(growthDataOne)
 #' @format A data frame with 97 rows and 10 variables
@@ -47,7 +56,7 @@ NULL
 #' }
 #' 
 #' @docType data
-#' @keywords datasets
+#' @keywords datasets, fitr
 #' @name growthDataFive
 #' @usage data(growthDataFive)
 #' @format A data frame with 485 rows and 10 variables
