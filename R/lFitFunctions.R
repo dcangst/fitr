@@ -99,6 +99,7 @@ pickfit <- function(fits,min_numP,RsqCutoff = 0.95) {
 #' @param od_name name of column containing OD values
 #' @param time_name name of column containing times (in units after start of experiment)
 #' @param select Either a vector containing IDs of a selection of fits to plot (IDs not found in \code{data} are quietly ignored), or one of \code{c("sample","sampleQ","failed")}. \code{"sample"} will draw an uniform sample of size \code{sample_size}. \code{"sampleQ"} will draw a total (rounded) of \code{sample_size} samples split over growthrate (mumax) sample quantiles. \code{"failed"} will display fits were no best fit could be selected.  Defaults to \code{FALSE}, showing all fits.
+#' @param sample_size Size of sample to draw, defaults to the arbitrary number of 5
 #' @param interactive boolean; Should every plot be shown? Advance to next plot by clicking in plot area.
 #' @section Output:
 #'    none

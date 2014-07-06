@@ -19,6 +19,8 @@ plot_fitr(bestfit, fits, data, od_name, time_name, interactive = TRUE,
 
 \item{select}{Either a vector containing IDs of a selection of fits to plot (IDs not found in \code{data} are quietly ignored), or one of \code{c("sample","sampleQ","failed")}. \code{"sample"} will draw an uniform sample of size \code{sample_size}. \code{"sampleQ"} will draw a total (rounded) of \code{sample_size} samples split over growthrate (mumax) sample quantiles. \code{"failed"} will display fits were no best fit could be selected.  Defaults to \code{FALSE}, showing all fits.}
 
+\item{sample_size}{Size of sample to draw, defaults to the arbitrary number of 5}
+
 \item{interactive}{boolean; Should every plot be shown? Advance to next plot by clicking in plot area.}
 }
 \description{
