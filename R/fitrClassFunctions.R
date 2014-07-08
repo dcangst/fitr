@@ -1,6 +1,6 @@
 #' print function for class "fitr"
 #'
-#' prints description of data and best fits
+#' prints description of data and selected 'best' fits
 #'
 #' @param object of class "fitr"
 #' @keywords fitr
@@ -48,7 +48,7 @@ print.fitr <- function(fitr){
 
 #' plot function for class "fitr"
 #'
-#' plots data and best fits, a wrapper for \code{\link{plot_fitr}}
+#' plots data and selected 'best' fits, a wrapper for \code{\link{plot_fitr}}
 #'
 #' @param object of class "fitr"
 #' @keywords fitr

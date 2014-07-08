@@ -4,7 +4,7 @@
 \alias{fitr}
 \alias{fitr-package}
 \title{fitr.
-A package containing tools for growth rate fitting of many growthcurves.}
+A package containing tools for estimation of maximum growthrates from many growthcurves.}
 \description{
 \code{\link{gcfit}}
 \code{\link{pickfit}}

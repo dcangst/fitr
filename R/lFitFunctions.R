@@ -1,6 +1,6 @@
-#' fit growth curve
+#' Estimate growth rate from growth curve
 #'
-#' fits a model to growth data. Outputs all fits as a \code{data.frame}
+#' fits a a linear model over a sliding window to growth data. Outputs all fits as a \code{data.frame}
 #'
 #' @param data long-form data frame with growth data
 #' @param w_size size of sliding window (number of datapoints)

@@ -10,7 +10,7 @@
 \item{object}{of class "fitr"}
 }
 \description{
-plots data and best fits, a wrapper for \code{\link{plot_fitr}}
+plots data and selected 'best' fits, a wrapper for \code{\link{plot_fitr}}
 }
 \keyword{fitr}
 

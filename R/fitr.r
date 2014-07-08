@@ -1,5 +1,5 @@
 #' fitr.
-#' A package containing tools for growth rate fitting of many growthcurves.
+#' A package containing tools for estimation of maximum growthrates from many growthcurves.
 #' 
 #' \code{\link{gcfit}}
 #' \code{\link{pickfit}}

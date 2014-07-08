@@ -9,7 +9,7 @@
 \item{object}{of class "fitr"}
 }
 \description{
-prints description of data and best fits
+prints description of data and selected 'best' fits
 }
 \keyword{fitr}
 
