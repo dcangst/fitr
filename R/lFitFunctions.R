@@ -69,7 +69,7 @@ pickfit <- function(fits,min_numP,RsqCutoff = 0.95) {
       }
     fits_numP <- fits_rsq[fits_rsq$numP>=min_numP,]
       if (dim(fits_numP)[1]==0 & comment=="ok"){
-        comment <- paste("no fits with >=",min_numP,"points")
+        comment <- paste("no fits with ",min_numP,"points")
       }
     fits_rsqC <- fits_numP[fits_numP$adj.r.sq>=RsqCutoff,]
       if (dim(fits_rsqC)[1]==0 & comment=="ok"){
@@ -245,7 +245,7 @@ d_gcfit <- function(data,w_size,od_name,time_name,trafo="log",min_numP=w_size,Rs
   
   cat("fitting growth curves...","\n"); flush.console()
 
-  fits <- plyr::dlply(data,.(ID),gcfit,w_size=15,od_name=od_name,time_name=time_name,trafo=trafo,.parallel=parallel,.progress=progress,...)
+  fits <- plyr::dlply(data,.(ID),gcfit,w_size=w_size,od_name=od_name,time_name=time_name,trafo=trafo,.parallel=parallel,.progress=progress,...)
 
   cat("selecting best fits...","\n"); flush.console()
 
