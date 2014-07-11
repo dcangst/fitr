@@ -9,7 +9,7 @@ print.fitr <- function(fitr){
   
   datasum <- plyr::ldply(fitr$fits,summarize,minT=min(nTime,na.rm=TRUE),maxT=max(nTime,na.rm=TRUE))
   failN <- dim(fitr$bestfits[fitr$bestfits$comment != "ok",c(1,11)])[1]
-  failPercent <- dim(fitr$bestfits[fitr$bestfits$comment != "ok",c(1,11)])[1]/length(datasum$ID)*100
+  failPercent <- signif(dim(fitr$bestfits[fitr$bestfits$comment != "ok",c(1,11)])[1]/length(datasum$ID)*100,digits=3)
 
   if (length(datasum$ID)>20) {
     IDs <- paste0(paste0(head(datasum$ID,5),collapse=", ")," .. ",paste0(tail(datasum$ID,5),collapse=", "))
