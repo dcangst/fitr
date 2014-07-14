@@ -21,7 +21,7 @@ gcfit	<-	function(data,w_size,od_name,time_name,trafo="log",logBase=2) {
     if (nrow(data)==w_size){
       numfits <- 1
       okComment <- "ok, just one fit possible"
-    } else if(nrow(data<w_size)){
+    } else if(nrow(data)<w_size){
       numfits <- 1
       w_size <- nrow(data)
       okComment <- "no fits for w_size"
