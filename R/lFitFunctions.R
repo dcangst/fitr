@@ -32,7 +32,7 @@ gcfit	<-	function(data,w_size,od_name,time_name,trafo="log",logBase=2) {
 
     filler <- rep(NA,numfits)
 
-    fits <- data.frame(minP=filler,numP=filler,nTime=filler,mumax=filler,intercept=filler,adj.r.sq=filler,dt=filler,maxOD=max(data$ODtrans,na.rm=TRUE),trafo=trafo,logBase=logBase,comment=filler) 
+    fits <- data.frame(minT=filler,maxT=filler,numP=filler,nTime=filler,mumax=filler,intercept=filler,adj.r.sq=filler,dt=filler,maxOD=max(data[,od_colnr],na.rm=TRUE),trafo=trafo,logBase=logBase,comment=filler) 
     
     for (i in 1:numfits) {
   
@@ -40,14 +40,15 @@ gcfit	<-	function(data,w_size,od_name,time_name,trafo="log",logBase=2) {
           numP <- length(na.omit(data_subset$ODtrans))
           
           if(numP < 3){
-            fits[i,]$minP <- i
+            fits[i,]$minT <- min(data_subset[,time_colnr],na.rm=TRUE)
             fits[i,]$comment <- "< 3 valid points for fit!"
             next
           }
           
           fit <- lm(data_subset$ODtrans ~ data_subset[,time_colnr],singular.ok=TRUE,na.action=na.omit)
   
-          fits[i,]$minP  <- i #N/minP
+          fits[i,]$minT  <- min(data_subset[,time_colnr],na.rm=TRUE) #minT
+          fits[i,]$maxT  <- max(data_subset[,time_colnr],na.rm=TRUE) #minT
           fits[i,]$numP <- numP
           fits[i,]$nTime <-  length(data[,time_colnr]) #number of timepoints in growthcurve
           fits[i,]$mumax  <- fit$coefficients[[2]] #mumax
@@ -228,9 +229,9 @@ plot_fitr  <- function(bestfit,fits,data,od_name,time_name,interactive = TRUE,se
                    )   
     legend("bottomright",legend=printParams,xjust=0.5, title="Best Fit:")
     color <- .rgbColorGradient(fits_sub$adj.r.sq)
-    plot(fits_sub$minP,fits_sub$mumax,col=color,xlab="sliding window start point",ylab="mumax")
+    plot(fits_sub$minT,fits_sub$mumax,col=color,xlab="sliding window start point",ylab="mumax")
     legend("topright",legend="color: adj. R squared")
-    points(bestfit_sub$minP,bestfit_sub$mumax,col="blue",pch=8,cex=1.5)
+    points(bestfit_sub$minT,bestfit_sub$mumax,col="blue",pch=8,cex=1.5)
    
     if(interactive){locator(1)}
   }

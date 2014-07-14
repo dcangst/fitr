@@ -34,10 +34,10 @@ print.fitr <- function(fitr){
   cat("\n")
 
   cat("$bestfits:","\n")
-  print(fitr$bestfits[,1:11])
+  print(fitr$bestfits[,1:12])
   cat("\n")
   cat("failed fits","\n")
-  print(fitr$bestfits[fitr$bestfits$comment != "ok",c(1,12)])
+  print(fitr$bestfits[fitr$bestfits$comment != "ok",c(1,13)])
   cat("\n")
 
   cat("$fits:","\n")
