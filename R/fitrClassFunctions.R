@@ -7,7 +7,7 @@
 #' @export
 print.fitr <- function(fitr){
   
-  datasum <- plyr::ldply(fitr$fits,summarize,minT=min(nTime,na.rm=TRUE),maxT=max(nTime,na.rm=TRUE))
+  datasum <- plyr::ldply(fitr$fits,plyr::summarize,minT=min(nTime,na.rm=TRUE),maxT=max(nTime,na.rm=TRUE))
   failN <- dim(fitr$bestfits[fitr$bestfits$comment != "ok",c(1,11)])[1]
   failPercent <- signif(dim(fitr$bestfits[fitr$bestfits$comment != "ok",c(1,11)])[1]/length(datasum$ID)*100,digits=3)
 
@@ -34,10 +34,10 @@ print.fitr <- function(fitr){
   cat("\n")
 
   cat("$bestfits:","\n")
-  print(fitr$bestfits[,1:10])
+  print(fitr$bestfits[,1:11])
   cat("\n")
   cat("failed fits","\n")
-  print(fitr$bestfits[fitr$bestfits$comment != "ok",c(1,11)])
+  print(fitr$bestfits[fitr$bestfits$comment != "ok",c(1,12)])
   cat("\n")
 
   cat("$fits:","\n")

@@ -193,6 +193,8 @@ plot_fitr  <- function(bestfit,fits,data,od_name,time_name,interactive = TRUE,se
     bestfit_sub <- subset(bestfit, ID == IDs[i])
     data_sub <- .gcDataTrafo(data_sub,od_colnr,time_colnr,bestfit_sub$trafo,bestfit_sub$logBase)
 
+    yName <- paste0("log",bestfit_sub$logBase," OD")
+
     if(interactive){
       cat("Fit ",i," of ",nFits," (ID = ",IDs[i],"). ",bestfit_sub$comment,". Click in plot area for next plot.","\n",sep="")
     }
@@ -204,7 +206,7 @@ plot_fitr  <- function(bestfit,fits,data,od_name,time_name,interactive = TRUE,se
                        data_sub[1,-c(od_colnr,time_colnr)],
                        collapse=" | "
                        )
-      plot(data_sub[,time_colnr], data_sub$ODtrans, xlab="time", ylab="OD",type="b",main=printMain)
+      plot(data_sub[,time_colnr], data_sub$ODtrans, xlab="time", ylab=yName,type="b",main=printMain)
       legend("bottomright",legend=bestfit_sub$comment,xjust=0.5, title="no best Fit:",text.col="red")
       plot(1,1)
       if(interactive){locator(1)}
@@ -218,7 +220,7 @@ plot_fitr  <- function(bestfit,fits,data,od_name,time_name,interactive = TRUE,se
                        collapse=" | "
                        )
 
-    plot(data_sub[,time_colnr], data_sub$ODtrans, xlab="time", ylab="OD",type="b",main=printMain)
+    plot(data_sub[,time_colnr], data_sub$ODtrans, xlab="time", ylab=yName,type="b",main=printMain)
     abline(a=bestfit_sub$intercept ,b=bestfit_sub$mumax,col="red")
     printParams <- paste(
                     c("intercept =","mumax =", "dt =", "Pears. R ="),
