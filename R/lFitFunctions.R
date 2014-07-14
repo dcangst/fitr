@@ -18,10 +18,23 @@ gcfit	<-	function(data,w_size,od_name,time_name,trafo="log",logBase=2) {
     
     data <- .gcDataTrafo(data,od_colnr,time_colnr,trafo,logBase)
     
-    filler <- rep(NA,nrow(data)-w_size)
-    fits <- data.frame(minP=filler,numP=filler,nTime=filler,mumax=filler,intercept=filler,adj.r.sq=filler,dt=filler,maxOD=max(data$ODtrans,na.rm=TRUE),trafo=trafo,logBase=logBase,comment=filler)
-      
-    for (i in 1:(nrow(data)-w_size)) {
+    if (nrow(data)==w_size){
+      numfits <- 1
+      okComment <- "ok, just one fit possible"
+    } else if(nrow(data<w_size)){
+      numfits <- 1
+      w_size <- nrow(data)
+      okComment <- "no fits for w_size"
+    } else {
+      numfits <- (nrow(data)-w_size)
+      okComment <- "ok"
+    }
+
+    filler <- rep(NA,numfits)
+
+    fits <- data.frame(minP=filler,numP=filler,nTime=filler,mumax=filler,intercept=filler,adj.r.sq=filler,dt=filler,maxOD=max(data$ODtrans,na.rm=TRUE),trafo=trafo,logBase=logBase,comment=filler) 
+    
+    for (i in 1:numfits) {
   
           data_subset <- data[i:(i+w_size-1),]
           numP <- length(na.omit(data_subset$ODtrans))
@@ -41,7 +54,7 @@ gcfit	<-	function(data,w_size,od_name,time_name,trafo="log",logBase=2) {
           fits[i,]$intercept  <- fit$coefficients[[1]] #intercept
           fits[i,]$adj.r.sq  <- summary(fit)$adj.r.squared #adjusted R squared of fit
           fits[i,]$dt  <- log(2,logBase)/fit$coefficients[[2]] #dt
-          fits[i,]$comment  <- "ok" # comment
+          fits[i,]$comment  <- okComment # comment
          
       }
 
