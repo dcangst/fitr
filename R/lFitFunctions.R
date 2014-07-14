@@ -11,15 +11,15 @@
 #'    \code{data.frame} of with all fits for all possible windows
 #' @keywords fitr, growthcurve
 #' @export
-gcfit	<-	function(data,w_size,od_name,time_name,trafo="log") {
+gcfit	<-	function(data,w_size,od_name,time_name,trafo="log",logBase=2) {
 
     od_colnr <- which(colnames(data) == od_name)
     time_colnr <- which(colnames(data) == time_name)
     
-    data <- .gcDataTrafo(data,od_colnr,time_colnr,trafo)
+    data <- .gcDataTrafo(data,od_colnr,time_colnr,trafo,logBase)
     
     filler <- rep(NA,nrow(data)-w_size)
-    fits <- data.frame(minP=filler,numP=filler,nTime=filler,mumax=filler,intercept=filler,adj.r.sq=filler,dt=filler,maxOD=max(data$ODtrans,na.rm=TRUE),trafo=trafo, comment=filler)
+    fits <- data.frame(minP=filler,numP=filler,nTime=filler,mumax=filler,intercept=filler,adj.r.sq=filler,dt=filler,maxOD=max(data$ODtrans,na.rm=TRUE),trafo=trafo,logBase=logBase,comment=filler)
       
     for (i in 1:(nrow(data)-w_size)) {
   
@@ -40,7 +40,7 @@ gcfit	<-	function(data,w_size,od_name,time_name,trafo="log") {
           fits[i,]$mumax  <- fit$coefficients[[2]] #mumax
           fits[i,]$intercept  <- fit$coefficients[[1]] #intercept
           fits[i,]$adj.r.sq  <- summary(fit)$adj.r.squared #adjusted R squared of fit
-          fits[i,]$dt  <- log(2)/fit$coefficients[[2]] #dt
+          fits[i,]$dt  <- log(2,logBase)/fit$coefficients[[2]] #dt
           fits[i,]$comment  <- "ok" # comment
          
       }
@@ -80,6 +80,7 @@ pickfit <- function(fits,min_numP,RsqCutoff = 0.95) {
       best <- fits[1,]
       best[] <- NA
       best$trafo <- fits[1,]$trafo
+      best$logBase <- fits[1,]$logBase
       best$comment <- comment
     } else {
       best <- fits_rsqC[fits_rsqC$mumax==max(fits_rsqC$mumax,na.rm=TRUE),]
@@ -111,7 +112,7 @@ plot_fitr  <- function(bestfit,fits,data,od_name,time_name,interactive = TRUE,se
 
   data <- data[with(data, order(data[,time_colnr])), ]
   
-  ### single growht curve
+  ### single growth curve
   if (class(fits)=="data.frame"){
     fits <- list(fits)
     attr(fits,"split_labels") <- data.frame(ID=data$ID[1])
@@ -177,7 +178,7 @@ plot_fitr  <- function(bestfit,fits,data,od_name,time_name,interactive = TRUE,se
     data_sub <- subset(data, ID == IDs[i])
     fits_sub <- fits[[as.numeric(rownames(subset(attr(fits,"split_labels"),ID==IDs[i])))]]
     bestfit_sub <- subset(bestfit, ID == IDs[i])
-    data_sub <- .gcDataTrafo(data_sub,od_colnr,time_colnr,bestfit_sub$trafo)
+    data_sub <- .gcDataTrafo(data_sub,od_colnr,time_colnr,bestfit_sub$trafo,bestfit_sub$logBase)
 
     if(interactive){
       cat("Fit ",i," of ",nFits," (ID = ",IDs[i],"). ",bestfit_sub$comment,". Click in plot area for next plot.","\n",sep="")
@@ -237,7 +238,7 @@ plot_fitr  <- function(bestfit,fits,data,od_name,time_name,interactive = TRUE,se
 #'    an object of class fitr.
 #' @keywords fitr, growthcurve
 #' @export
-d_gcfit <- function(data,w_size,od_name,time_name,trafo="log",min_numP=w_size,RsqCutoff=0.95,parallel=FALSE,progress="text",...){
+d_gcfit <- function(data,w_size,od_name,time_name,trafo="log",logBase=2,min_numP=w_size,RsqCutoff=0.95,parallel=FALSE,progress="text",...){
  
   if (parallel) {
     doParallel::registerDoParallel()
@@ -245,7 +246,7 @@ d_gcfit <- function(data,w_size,od_name,time_name,trafo="log",min_numP=w_size,Rs
   
   cat("fitting growth curves...","\n"); flush.console()
 
-  fits <- plyr::dlply(data,.(ID),gcfit,w_size=w_size,od_name=od_name,time_name=time_name,trafo=trafo,.parallel=parallel,.progress=progress,...)
+  fits <- plyr::dlply(data,.(ID),gcfit,w_size=w_size,od_name=od_name,time_name=time_name,trafo=trafo,logBase=logBase,.parallel=parallel,.progress=progress,...)
 
   cat("selecting best fits...","\n"); flush.console()
 
@@ -259,6 +260,7 @@ d_gcfit <- function(data,w_size,od_name,time_name,trafo="log",min_numP=w_size,Rs
                           time_name,
                           RsqCutoff,
                           trafo,
+                          logBase,
                           stringsAsFactors=FALSE
                          )
 

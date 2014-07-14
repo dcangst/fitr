@@ -3,8 +3,9 @@
 \alias{d_gcfit}
 \title{Wrapper function for automated growth curve fitting}
 \usage{
-d_gcfit(data, w_size, od_name, time_name, trafo = "log", min_numP = w_size,
-  RsqCutoff = 0.95, parallel = FALSE, progress = "text", ...)
+d_gcfit(data, w_size, od_name, time_name, trafo = "log", logBase = 2,
+  min_numP = w_size, RsqCutoff = 0.95, parallel = FALSE,
+  progress = "text", ...)
 }
 \arguments{
 \item{data}{long-form data frame with growth data}
