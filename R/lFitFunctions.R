@@ -82,7 +82,7 @@ pickfit <- function(fits,min_numP,RsqCutoff = 0.95) {
       }
     fits_numP <- fits_rsq[fits_rsq$numP>=min_numP,]
       if (dim(fits_numP)[1]==0 & comment=="ok"){
-        comment <- paste("no fits with ",min_numP,"points")
+        comment <- paste("no fits with",min_numP,"points")
       }
     fits_rsqC <- fits_numP[fits_numP$adj.r.sq>=RsqCutoff,]
       if (dim(fits_rsqC)[1]==0 & comment=="ok"){
