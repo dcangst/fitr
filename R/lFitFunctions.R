@@ -214,14 +214,16 @@ plot_fitr  <- function(bestfit,fits,data,od_name,time_name,interactive = TRUE,se
       next
     }
 
+    pointcols <- as.numeric(!(data_sub[,time_colnr] >= bestfit_sub$minT & data_sub[,time_colnr] <= bestfit_sub$maxT))
+    pointcols[pointcols==0] <- 51 
     par(mfrow=c(2,1),oma=c(0,0,0,1),mar=c(4,4,4,0),mgp=c(3,1,0))
-    printMain <- paste0(names(data_sub[,-c(od_colnr,time_colnr)]),
-                       c(" = "),
-                       data_sub[1,-c(od_colnr,time_colnr)],
-                       collapse=" | "
-                       )
+    #printMain <- paste0(names(data_sub[,-c(od_colnr,time_colnr)]),
+    #                   c(" = "),
+    #                   data_sub[1,-c(od_colnr,time_colnr)],
+    #                   collapse=" | "
+    #                   )
 
-    plot(data_sub[,time_colnr], data_sub$ODtrans, xlab="time", ylab=yName,type="b",main=printMain)
+    plot(data_sub[,time_colnr], data_sub$ODtrans, xlab="time", ylab=yName,type="b",main=bestfit_sub$ID,col=pointcols)
     abline(a=bestfit_sub$intercept ,b=bestfit_sub$mumax,col="red")
     printParams <- paste(
                     c("intercept =","mumax =", "dt =", "Pears. R ="),
@@ -241,7 +243,7 @@ plot_fitr  <- function(bestfit,fits,data,od_name,time_name,interactive = TRUE,se
 
 #' Wrapper function for automated growth curve fitting
 #' 
-#' @param data long-form data frame with growth data
+#' @param data long-form data frame with growth data, must contain column named ID with a unique ID for each curve.
 #' @param w_size size of sliding window (number of datapoints considered)
 #' @param od_name name of column containing OD values
 #' @param time_name name of column containing times (in units after start of experiment)

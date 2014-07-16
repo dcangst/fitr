@@ -8,7 +8,7 @@ d_gcfit(data, w_size, od_name, time_name, trafo = "log", logBase = 2,
   progress = "text", ...)
 }
 \arguments{
-\item{data}{long-form data frame with growth data}
+\item{data}{long-form data frame with growth data, must contain column named ID with a unique ID for each curve.}
 
 \item{w_size}{size of sliding window (number of datapoints considered)}
 
