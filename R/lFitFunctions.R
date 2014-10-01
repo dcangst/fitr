@@ -282,21 +282,26 @@ d_gcfit <- function(data,w_size,od_name,time_name,trafo="log",logBase=2,min_numP
   if (class(data)=="fitr_data"){
     
     fits_list <- vector("list",length=length(data$blanks))
+    split_labels_list <- vector("list",length(data$blanks))
+
+    names(fits_list) <- data$blanks
     group_colnr <- which(colnames(data$data) == colnames(data$blanks)[1])
     
     for(i in 1:length(data$blanks)){
-      cat("fitting growth curves for ",colnames(data$blanks)[1]," ",data$blanks[i,1],"...","\n"); flush.console()
+      cat("fitting growth curves for",colnames(data$blanks)[1],data$blanks[i,1],"...","\n"); flush.console()
 
       print(group_colnr)
 
       data_sub_group <- subset(data$data,data$data[,group_colnr]==data$blanks[i,1])
 
-      print(head(data_sub_group))
+      print(dim(data_sub_group))
 
-      fits_list[i] <- plyr::dlply(data_sub_group,.(ID),gcfit,w_size=w_size,od_name=od_name,time_name=time_name,trafo=trafo,logBase=logBase,growthCheck=growthCheck,blankSD=data$blanks$blank_sd[i],.parallel=parallel,.progress=progress,...)
+      fits_list[[i]] <- plyr::dlply(data_sub_group,.(ID),gcfit,w_size=w_size,od_name=od_name,time_name=time_name,trafo=trafo,logBase=logBase,growthCheck=growthCheck,blankSD=data$blanks$blank_sd[i],.parallel=parallel,.progress=progress,...)
+
+      split_labels_list[[i]] <- attributes(fits_list[[i]])$split_labels  
     }
 
-    fits <- plyr::ldply(fits_list, data.frame)
+    fits <- unlist(fits_list,recursive=FALSE)
 
   } else {
 
@@ -328,7 +333,7 @@ d_gcfit <- function(data,w_size,od_name,time_name,trafo="log",logBase=2,min_numP
   #out <- list(data=data,fits=fits,bestfits=best,parameter=parameter)
   #class(out) <- "fitr"
   
-  return(fits)
+  return(split_labels_list)
 
   #return(out)
 
