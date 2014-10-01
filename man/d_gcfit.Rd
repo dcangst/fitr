@@ -4,8 +4,8 @@
 \title{Wrapper function for automated growth curve fitting}
 \usage{
 d_gcfit(data, w_size, od_name, time_name, trafo = "log", logBase = 2,
-  min_numP = w_size, RsqCutoff = 0.95, parallel = FALSE,
-  progress = "text", ...)
+  min_numP = w_size, growthCheck = "none", RsqCutoff = 0.95,
+  parallel = FALSE, progress = "text", ...)
 }
 \arguments{
 \item{data}{long-form data frame with growth data, must contain column named ID with a unique ID for each curve.}
@@ -17,6 +17,10 @@ d_gcfit(data, w_size, od_name, time_name, trafo = "log", logBase = 2,
 \item{time_name}{name of column containing times (in units after start of experiment)}
 
 \item{trafo}{Data transformation, one of \code{"logNN0"} (for log(N/N0)), \code{"log"} or \code{"none"}.}
+
+\item{logBase}{Base for logarithmitic transformation if trafo != "none", defaults to 2.}
+
+\item{growthCheck}{Check whether there was growth at all. One of \code{"none"} (no Check), \code{"sd2"} (Growth only if difference between minimal and maximal OD is larger than twice the standard deviation of the blanks). Requires data of class \code{"fitr_data"}}
 
 \item{RsqCutoff}{Only fits with a correlation coefficient higher than the cutoff are considered. Defaults to \code{0.95}.}
 

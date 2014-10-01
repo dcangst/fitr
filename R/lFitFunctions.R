@@ -2,26 +2,30 @@
 #'
 #' fits a a linear model over a sliding window to growth data. Outputs all fits as a \code{data.frame}
 #'
-#' @param data long-form data frame with growth data
-#' @param w_size size of sliding window (number of datapoints)
-#' @param od_name name of column containing OD values
-#' @param time_name name of column containing times (in units after start of experiment)
+#' @param data long-form data frame with growth data.
+#' @param w_size size of sliding window (number of datapoints).
+#' @param od_name name of column containing OD values.
+#' @param time_name name of column containing times (in units after start of experiment).
 #' @param trafo Data transformation, one of \code{"logNN0"} (for log(N/N0) transformation), \code{"log"} or \code{"none"}.
+#' @param logBase Base for logarithmitic transformation if trafo != "none", defaults to 2.
+#' @param growthCheck Check whether there was growth at all. One of \code{"none"} (no Check), \code{"sd2"} (Growth only if difference between minimal and maximal OD is larger than twice the standard deviation of the blanks).
+#' @param blankSD standard deviation of blanks appropriate to this curve, required if \code{"growthCheck"} = \code{"sd2"} 
 #' @section Output:
 #'    \code{data.frame} of with all fits for all possible windows
 #' @keywords fitr, growthcurve
 #' @export
-gcfit	<-	function(data,w_size,od_name,time_name,trafo="log",logBase=2) {
+gcfit	<-	function(data,w_size,od_name,time_name,trafo="log",logBase=2,growthCheck="none",blankSD=NA) {
 
     od_colnr <- which(colnames(data) == od_name)
     time_colnr <- which(colnames(data) == time_name)
     
     data <- .gcDataTrafo(data,od_colnr,time_colnr,trafo,logBase)
     
+    ### check if enough points are available for fit.
     if (nrow(data)==w_size){
       numfits <- 1
       okComment <- "ok, just one fit possible"
-    } else if(nrow(data)<w_size){
+    } else if (nrow(data)<w_size){
       numfits <- 1
       w_size <- nrow(data)
       okComment <- "no fits for w_size"
@@ -30,16 +34,19 @@ gcfit	<-	function(data,w_size,od_name,time_name,trafo="log",logBase=2) {
       okComment <- "ok"
     }
 
+    ### check for growth if desired
+
+
     filler <- rep(NA,numfits)
 
-    fits <- data.frame(minT=filler,maxT=filler,numP=filler,nTime=filler,mumax=filler,intercept=filler,adj.r.sq=filler,dt=filler,maxOD=max(data[,od_colnr],na.rm=TRUE),trafo=trafo,logBase=logBase,comment=filler) 
+    fits <- data.frame(minT=filler,maxT=filler,numP=filler,nTime=filler,mumax=filler,intercept=filler,adj.r.sq=filler,dt=filler,maxOD=max(data[,od_colnr],na.rm=TRUE),trafo=trafo,logBase=logBase,growth=TRUE,comment=filler) 
     
     for (i in 1:numfits) {
   
           data_subset <- data[i:(i+w_size-1),]
           numP <- length(na.omit(data_subset$ODtrans))
           
-          if(numP < 3){
+          if (numP < 3){
             fits[i,]$minT <- min(data_subset[,time_colnr],na.rm=TRUE)
             fits[i,]$comment <- "< 3 valid points for fit!"
             next
@@ -58,6 +65,14 @@ gcfit	<-	function(data,w_size,od_name,time_name,trafo="log",logBase=2) {
           fits[i,]$comment  <- okComment # comment
          
       }
+
+  if (growthCheck=="sd2"){
+    if(is.numeric(blankSD)==FALSE){
+      stop("no / not numeric standard deviation for blanks provided.")
+    }
+    print(max(data[,od_colnr],na.rm=TRUE)-abs(min(data[,od_colnr],na.rm=TRUE)) > 2*blankSD)
+    fits$growth <- max(data[,od_colnr],na.rm=TRUE)-abs(min(data[,od_colnr],na.rm=TRUE)) > 2*blankSD
+  }
 
   return(fits)
 
@@ -90,7 +105,7 @@ pickfit <- function(fits,min_numP,RsqCutoff = 0.95) {
         comment <- paste0("no fits with adj.r.sq >=",RsqCutoff," (max=",round(max(fits_numP$adj.r.sq,na.rm=TRUE),5),")")
       }
 
-    if(comment != "ok"){
+    if (comment != "ok"){
       best <- fits[1,]
       best[] <- NA
       best$trafo <- fits[1,]$trafo
@@ -196,7 +211,7 @@ plot_fitr  <- function(bestfit,fits,data,od_name,time_name,interactive = TRUE,se
 
     yName <- paste0("log",bestfit_sub$logBase," OD")
 
-    if(interactive){
+    if (interactive){
       cat("Fit ",i," of ",nFits," (ID = ",IDs[i],"). ",bestfit_sub$comment,". Click in plot area for next plot.","\n",sep="")
     }
 
@@ -248,6 +263,8 @@ plot_fitr  <- function(bestfit,fits,data,od_name,time_name,interactive = TRUE,se
 #' @param od_name name of column containing OD values
 #' @param time_name name of column containing times (in units after start of experiment)
 #' @param trafo Data transformation, one of \code{"logNN0"} (for log(N/N0)), \code{"log"} or \code{"none"}.
+#' @param logBase Base for logarithmitic transformation if trafo != "none", defaults to 2.
+#' @param growthCheck Check whether there was growth at all. One of \code{"none"} (no Check), \code{"sd2"} (Growth only if difference between minimal and maximal OD is larger than twice the standard deviation of the blanks). Requires data of class \code{"fitr_data"}
 #' @param RsqCutoff Only fits with a correlation coefficient higher than the cutoff are considered. Defaults to \code{0.95}.
 #' @param parallel if \code{TRUE}, apply function in parallel, using parallel backend provided by \code{\link[foreach]{foreach}}.
 #' @param progress name of the progress bar to use, see \code{\link[plyr]{create_progress_bar}}
@@ -256,36 +273,105 @@ plot_fitr  <- function(bestfit,fits,data,od_name,time_name,interactive = TRUE,se
 #'    an object of class fitr.
 #' @keywords fitr, growthcurve
 #' @export
-d_gcfit <- function(data,w_size,od_name,time_name,trafo="log",logBase=2,min_numP=w_size,RsqCutoff=0.95,parallel=FALSE,progress="text",...){
+d_gcfit <- function(data,w_size,od_name,time_name,trafo="log",logBase=2,min_numP=w_size,growthCheck="none",RsqCutoff=0.95,parallel=FALSE,progress="text",...){
  
   if (parallel) {
     doParallel::registerDoParallel()
   }  
   
-  cat("fitting growth curves...","\n"); flush.console()
+  if (class(data)=="fitr_data"){
+    
+    fits_list <- vector("list",length=length(data$blanks))
+    group_colnr <- which(colnames(data$data) == colnames(data$blanks)[1])
+    
+    for(i in 1:length(data$blanks)){
+      cat("fitting growth curves for ",colnames(data$blanks)[1]," ",data$blanks[i,1],"...","\n"); flush.console()
 
-  fits <- plyr::dlply(data,.(ID),gcfit,w_size=w_size,od_name=od_name,time_name=time_name,trafo=trafo,logBase=logBase,.parallel=parallel,.progress=progress,...)
+      print(group_colnr)
 
-  cat("selecting best fits...","\n"); flush.console()
+      data_sub_group <- subset(data$data,data$data[,group_colnr]==data$blanks[i,1])
 
-  best <- plyr::ldply(fits,pickfit,min_numP=min_numP,RsqCutoff=RsqCutoff,.progress=progress,...)
+      print(head(data_sub_group))
 
-  parameter <- data.frame(
-                          date = Sys.Date(),
-                          nFits = dim(best)[1], 
-                          w_size,
-                          od_name,
-                          time_name,
-                          RsqCutoff,
-                          trafo,
-                          logBase,
-                          stringsAsFactors=FALSE
-                         )
+      fits_list[i] <- plyr::dlply(data_sub_group,.(ID),gcfit,w_size=w_size,od_name=od_name,time_name=time_name,trafo=trafo,logBase=logBase,growthCheck=growthCheck,blankSD=data$blanks$blank_sd[i],.parallel=parallel,.progress=progress,...)
+    }
 
-  out <- list(data=data,fits=fits,bestfits=best,parameter=parameter)
-  class(out) <- "fitr"
+    fits <- plyr::ldply(fits_list, data.frame)
+
+  } else {
+
+    if(growthCheck!="none"){
+      stop("growthCheck requires data of class fitr_data, generated with gcblanking()")
+    }
+
+    cat("fitting growth curves...","\n"); flush.console()
+    fits <- plyr::dlply(data,.(ID),gcfit,w_size=w_size,od_name=od_name,time_name=time_name,trafo=trafo,logBase=logBase,.parallel=parallel,.progress=progress,...)
+
+  }
+
+  #cat("selecting best fits...","\n"); flush.console()
+  #best <- plyr::ldply(fits,pickfit,min_numP=min_numP,RsqCutoff=RsqCutoff,.progress=progress,...)
+#
+  #parameter <- data.frame(
+  #                        date = Sys.Date(),
+  #                        nFits = dim(best)[1], 
+  #                        w_size,
+  #                        od_name,
+  #                        time_name,
+  #                        trafo,
+  #                        logBase,
+  #                        RsqCutoff,
+  #                        growthCheck,
+  #                        stringsAsFactors=FALSE
+  #                       )
+#
+  #out <- list(data=data,fits=fits,bestfits=best,parameter=parameter)
+  #class(out) <- "fitr"
   
-  return(out)
+  return(fits)
+
+  #return(out)
 
 } # fn:d_gcfit
+
+
+#' Function for blanking OD data & flagging growth/no growth
+#' 
+#' @param data long-form data frame with growth data, must contain column named ID with a unique ID for each curve.
+#' @param group name of grouping variable (e.g. plates for which blanks must be seperate), a factor.
+#' @param od_name name of column containing OD values
+#' @param bl_col name of column containing well description, e.g. "strain"
+#' @param bl_name which wells are blanks?, e.g. "bl"
+#' @section Output:
+#'    long-form data frame with additional columns od_name_bl (blanked OD values) and QCgrowth (logical)
+#' @keywords fitr, growthcurve, blanking
+#' @export
+gcblanking <- function(data,group,od_name,bl_col,bl_name){
+  group_colnr <- which(colnames(data) == group)
+  od_colnr <- which(colnames(data) == od_name)
+  bl_colnr <- which(colnames(data) == bl_col)
+
+  data$newODcolumn <- NA
+  
+  blanks <- data.frame(group=levels(data[,group_colnr]),blank=NA,blank_sd=NA)
+  
+  groups <- levels(data[,group_colnr])
+  curves <- levels(data$ID)
+  
+  for (i in 1:length(groups)) {
+    blanks$blank[i] <- mean(data[data[,group_colnr]==groups[i] & data[,bl_colnr]==bl_name,od_colnr])
+    blanks$blank_sd[i] <- sd(data[data[,group_colnr]==groups[i] & data[,bl_colnr]==bl_name,od_colnr])
+    
+    data[data[,group_colnr]==groups[i],]$newODcolumn <- data[data[,group_colnr]==groups[i],od_colnr]-blanks$blank[i]
+     
+  }
+  
+  names(data)[names(data)=="newODcolumn"] <- paste0(od_name,"_bl")
+  names(blanks)[names(blanks)=="group"] <- group
+  
+  dataOut <- list(data=data,blanks=blanks)
+  class(dataOut) <- "fitr_data"
+  return(dataOut)
+
+} # fn:gcblanking
 

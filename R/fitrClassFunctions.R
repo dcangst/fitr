@@ -88,7 +88,7 @@ write.fitr <- function(fitr,basefile=paste0(format(Sys.time(), "%Y%m%d"),"fitR")
   write.table(sumtext1,paste0(basefile,"_summary.csv"),row.names=FALSE,col.names=FALSE,append=TRUE,sep=sep)
   write.table(sumtext2,paste0(basefile,"_summary.csv"),row.names=FALSE,col.names=FALSE,append=TRUE,sep=sep)
   write.table("$bestfits",paste0(basefile,"_summary.csv"),row.names=FALSE,col.names=FALSE,append=TRUE,sep=sep)
-  if(description==FALSE){
+  if (description==FALSE){
     write.table(fitr$bestfits,paste0(basefile,"_summary.csv"),append=TRUE,row.names=FALSE,sep=sep)
   } else {
   write.table(merge(description,fitr$bestfits,by=c("ID")),paste0(basefile,"_summary.csv"),append=TRUE,row.names=FALSE,sep=sep)

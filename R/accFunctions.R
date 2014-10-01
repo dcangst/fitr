@@ -13,7 +13,7 @@
   
   data <- data[with(data, order(data[,time_colnr])), ]
 
-  if(trafo=="logNN0"){
+  if (trafo=="logNN0"){
     data$ODtrans <- log(data[,od_colnr]/data[1,od_colnr],logBase)
   } else if (trafo=="log"){
     data$ODtrans <- log(data[,od_colnr],logBase)
