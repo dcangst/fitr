@@ -289,19 +289,18 @@ d_gcfit <- function(data,w_size,od_name,time_name,trafo="log",logBase=2,min_numP
     
     for(i in 1:length(data$blanks)){
       cat("fitting growth curves for",colnames(data$blanks)[1],data$blanks[i,1],"...","\n"); flush.console()
-
-      print(group_colnr)
-
+      
       data_sub_group <- subset(data$data,data$data[,group_colnr]==data$blanks[i,1])
-
-      print(dim(data_sub_group))
 
       fits_list[[i]] <- plyr::dlply(data_sub_group,.(ID),gcfit,w_size=w_size,od_name=od_name,time_name=time_name,trafo=trafo,logBase=logBase,growthCheck=growthCheck,blankSD=data$blanks$blank_sd[i],.parallel=parallel,.progress=progress,...)
 
       split_labels_list[[i]] <- attributes(fits_list[[i]])$split_labels  
+
     }
 
     fits <- unlist(fits_list,recursive=FALSE)
+    attr(fits,"split_labels") <- ldply(split_labels_list,data.frame)
+    attr(fits,"split_type") <- "data.frame"
 
   } else {
 
@@ -314,28 +313,28 @@ d_gcfit <- function(data,w_size,od_name,time_name,trafo="log",logBase=2,min_numP
 
   }
 
-  #cat("selecting best fits...","\n"); flush.console()
-  #best <- plyr::ldply(fits,pickfit,min_numP=min_numP,RsqCutoff=RsqCutoff,.progress=progress,...)
-#
-  #parameter <- data.frame(
-  #                        date = Sys.Date(),
-  #                        nFits = dim(best)[1], 
-  #                        w_size,
-  #                        od_name,
-  #                        time_name,
-  #                        trafo,
-  #                        logBase,
-  #                        RsqCutoff,
-  #                        growthCheck,
-  #                        stringsAsFactors=FALSE
-  #                       )
-#
-  #out <- list(data=data,fits=fits,bestfits=best,parameter=parameter)
-  #class(out) <- "fitr"
-  
-  return(split_labels_list)
+  cat("selecting best fits...","\n"); flush.console()
+  best <- plyr::ldply(fits,pickfit,min_numP=min_numP,RsqCutoff=RsqCutoff,.progress=progress,...)
 
-  #return(out)
+  parameter <- data.frame(
+                          date = Sys.Date(),
+                          nFits = dim(best)[1], 
+                          w_size,
+                          od_name,
+                          time_name,
+                          trafo,
+                          logBase,
+                          RsqCutoff,
+                          growthCheck,
+                          stringsAsFactors=FALSE
+                         )
+
+  out <- list(data=data,fits=fits,bestfits=best,parameter=parameter)
+  class(out) <- "fitr"
+  
+ 
+
+  return(out)
 
 } # fn:d_gcfit
 
