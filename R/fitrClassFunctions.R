@@ -37,7 +37,8 @@ print.fitr <- function(fitr){
   print(fitr$bestfits[,1:12])
   cat("\n")
   cat("failed fits","\n")
-  print(fitr$bestfits[fitr$bestfits$comment != "ok",c(1,13)])
+  print(fitr$bestfits[fitr$bestfits$comment != "ok",c(1,14)])
+  print(attr(fitr$bestfits,"error codes"))
   cat("\n")
 
   cat("$fits:","\n")
@@ -57,7 +58,7 @@ plot.fitr <- function(fitr,interactive=TRUE,select=FALSE,sample_size=5){
 
   plot_fitr(bestfit=fitr$bestfits,
           fits=fitr$fits,
-          data=fitr$data,
+          data=fitr$data$data,
           od_name=fitr$parameter$od_name,
           time_name=fitr$parameter$time_name,
           interactive=interactive,
@@ -88,7 +89,7 @@ write.fitr <- function(fitr,basefile=paste0(format(Sys.time(), "%Y%m%d"),"fitR")
   write.table(sumtext1,paste0(basefile,"_summary.csv"),row.names=FALSE,col.names=FALSE,append=TRUE,sep=sep)
   write.table(sumtext2,paste0(basefile,"_summary.csv"),row.names=FALSE,col.names=FALSE,append=TRUE,sep=sep)
   write.table("$bestfits",paste0(basefile,"_summary.csv"),row.names=FALSE,col.names=FALSE,append=TRUE,sep=sep)
-  if(description==FALSE){
+  if (description==FALSE){
     write.table(fitr$bestfits,paste0(basefile,"_summary.csv"),append=TRUE,row.names=FALSE,sep=sep)
   } else {
   write.table(merge(description,fitr$bestfits,by=c("ID")),paste0(basefile,"_summary.csv"),append=TRUE,row.names=FALSE,sep=sep)
