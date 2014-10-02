@@ -46,3 +46,21 @@
   return(color)
 
 }
+
+#' add attributes with error codes to data.frame
+#'
+#' 
+#' @param best a data.frame from \code{\link{"pickfit"}}
+#' @section Output:
+#'    data.frame with attribute \code{"error codes"}
+#' @keywords fitr
+.attrErrorCodes <- function(best,min_numP,RsqCutoff,growthCheck){
+  attr(best, "error codes") <- data.frame(code=c("a","b","c","d"),
+                                            description=c("no valid fits",
+                                                          paste("no fits with",min_numP,"points"),
+                                                          paste("no fits with adj.r.sq >=",RsqCutoff),
+                                                          paste("no growth (growthCheck=",growthCheck,")")                                                          
+                                                          )
+                                            )
+  return(best)
+}

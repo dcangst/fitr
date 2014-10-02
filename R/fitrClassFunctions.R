@@ -37,7 +37,8 @@ print.fitr <- function(fitr){
   print(fitr$bestfits[,1:12])
   cat("\n")
   cat("failed fits","\n")
-  print(fitr$bestfits[fitr$bestfits$comment != "ok",c(1,13)])
+  print(fitr$bestfits[fitr$bestfits$comment != "ok",c(1,14)])
+  print(attr(fitr$bestfits,"error codes"))
   cat("\n")
 
   cat("$fits:","\n")
@@ -57,7 +58,7 @@ plot.fitr <- function(fitr,interactive=TRUE,select=FALSE,sample_size=5){
 
   plot_fitr(bestfit=fitr$bestfits,
           fits=fitr$fits,
-          data=fitr$data,
+          data=fitr$data$data,
           od_name=fitr$parameter$od_name,
           time_name=fitr$parameter$time_name,
           interactive=interactive,
