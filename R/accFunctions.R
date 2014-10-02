@@ -13,7 +13,7 @@
   
   data <- data[with(data, order(data[,time_colnr])), ]
 
-  if(trafo=="logNN0"){
+  if (trafo=="logNN0"){
     data$ODtrans <- log(data[,od_colnr]/data[1,od_colnr],logBase)
   } else if (trafo=="log"){
     data$ODtrans <- log(data[,od_colnr],logBase)
@@ -45,4 +45,22 @@
   color <- rgb((x-min(x, na.rm=TRUE))/(max(x, na.rm=TRUE)-min(x, na.rm=TRUE)),0,1-(x-min(x, na.rm=TRUE))/(max(x, na.rm=TRUE)-min(x, na.rm=TRUE)))
   return(color)
 
+}
+
+#' add attributes with error codes to data.frame
+#'
+#' 
+#' @param best a data.frame from \code{\link{"pickfit"}}
+#' @section Output:
+#'    data.frame with attribute \code{"error codes"}
+#' @keywords fitr
+.attrErrorCodes <- function(best,min_numP,RsqCutoff,growthCheck){
+  attr(best, "error codes") <- data.frame(code=c("a","b","c","d"),
+                                            description=c("no valid fits",
+                                                          paste("no fits with",min_numP,"points"),
+                                                          paste("no fits with adj.r.sq >=",RsqCutoff),
+                                                          paste("no growth (growthCheck=",growthCheck,")")                                                          
+                                                          )
+                                            )
+  return(best)
 }
