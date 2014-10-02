@@ -41,7 +41,7 @@ gcfit	<-	function(data,w_size,od_name,time_name,trafo="log",logBase=2,growthChec
     for (i in 1:numfits) {
   
           data_subset <- data[i:(i+w_size-1),]
-          numP <- length(na.omit(data_subset$ODtrans))
+          numP <- length(na.exclude(data_subset$ODtrans))
           
           if (numP < 3){
             fits[i,]$minT <- min(data_subset[,time_colnr],na.rm=TRUE)
@@ -49,7 +49,7 @@ gcfit	<-	function(data,w_size,od_name,time_name,trafo="log",logBase=2,growthChec
             next
           }
           
-          fit <- lm(data_subset$ODtrans ~ data_subset[,time_colnr],singular.ok=TRUE,na.action=na.omit)
+          fit <- lm(data_subset$ODtrans ~ data_subset[,time_colnr],singular.ok=TRUE,na.action=na.exclude)
   
           fits[i,]$minT  <- min(data_subset[,time_colnr],na.rm=TRUE) #minT
           fits[i,]$maxT  <- max(data_subset[,time_colnr],na.rm=TRUE) #minT
@@ -91,6 +91,8 @@ gcfit	<-	function(data,w_size,od_name,time_name,trafo="log",logBase=2,growthChec
 pickfit <- function(fits,min_numP,RsqCutoff = 0.95,growthCheck) {
 
     gc_comment <- ""
+
+    fits <- fits[fits$mumax>=0.2*max(fits$mumax,na.rm=T),]
 
     fits_rsq <- fits[is.na(fits$adj.r.sq)==FALSE,]
     if (dim(fits_rsq)[1]==0){
