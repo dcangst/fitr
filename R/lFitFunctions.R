@@ -125,8 +125,9 @@ pickfit <- function(fits,min_numP,RsqCutoff = 0.95,growthCheck) {
       best$logBase <- fits[1,]$logBase
       best$growth <- fits[1,]$growth
       best$comment <- gc_comment
+      if(grep("d",gc_comment)){best$mumax <- 0}
     } else {
-      best <- fits_growthCheck[fits_growthCheck$mumax==max(fits_growthCheck$mumax,na.rm=TRUE),]
+      best <- fits_growthCheck[fits_growthCheck$adj.r.sq==max(fits_growthCheck$adj.r.sq,na.rm=TRUE),]
     }
 
     best <- .attrErrorCodes(best,min_numP,RsqCutoff,growthCheck)
