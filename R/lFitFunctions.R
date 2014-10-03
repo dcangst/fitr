@@ -92,7 +92,7 @@ pickfit <- function(fits,min_numP,RsqCutoff = 0.95,growthCheck) {
 
     gc_comment <- ""
 
-    fits <- fits[fits$mumax>=0.2*max(fits$mumax,na.rm=T),]
+    #fits <- fits[fits$mumax>=0.9*max(fits$mumax,na.rm=T),]
 
     fits_rsq <- fits[is.na(fits$adj.r.sq)==FALSE,]
     if (dim(fits_rsq)[1]==0){
@@ -127,7 +127,7 @@ pickfit <- function(fits,min_numP,RsqCutoff = 0.95,growthCheck) {
       best$comment <- gc_comment
       if(grep("d",gc_comment)){best$mumax <- 0}
     } else {
-      best <- fits_growthCheck[fits_growthCheck$adj.r.sq==max(fits_growthCheck$adj.r.sq,na.rm=TRUE),]
+      best <- fits_growthCheck[fits_growthCheck$mumax==max(fits_growthCheck$mumax,na.rm=TRUE),]
     }
 
     best <- .attrErrorCodes(best,min_numP,RsqCutoff,growthCheck)
