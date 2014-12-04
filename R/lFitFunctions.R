@@ -14,7 +14,7 @@
 #'    \code{data.frame} of with all fits for all possible windows
 #' @keywords fitr, growthcurve
 #' @export
-gcfit	<-	function(data,w_size,od_name,time_name,trafo="log",logBase=2,growthCheck,blankSD=NA) {
+gcfit	<-	function(data,w_size,od_name,time_name,trafo="log",logBase=2,growthCheck="none",blankSD=NA) {
 
     od_colnr <- which(colnames(data) == od_name)
     time_colnr <- which(colnames(data) == time_name)
@@ -88,7 +88,7 @@ gcfit	<-	function(data,w_size,od_name,time_name,trafo="log",logBase=2,growthChec
 #'    \code{data.frame} best fits.
 #' @keywords fitr, growthcurve
 #' @export
-pickfit <- function(fits,min_numP,RsqCutoff = 0.95,growthCheck) {
+pickfit <- function(fits,min_numP,RsqCutoff = 0.95,growthCheck="none") {
 
     gc_comment <- ""
 
@@ -294,7 +294,7 @@ plot_fitr  <- function(bestfit,fits,data,od_name,time_name,interactive = TRUE,se
 #'    an object of class fitr.
 #' @keywords fitr, growthcurve
 #' @export
-d_gcfit <- function(data,w_size,od_name,time_name,trafo="log",logBase=2,min_numP=w_size,growthCheck,RsqCutoff=0.95,parallel=FALSE,progress="text",...){
+d_gcfit <- function(data,w_size,od_name,time_name,trafo="log",logBase=2,min_numP=w_size,growthCheck="none",RsqCutoff=0.95,parallel=FALSE,progress="text",...){
  
   if (parallel) {
     doParallel::registerDoParallel()
