@@ -302,8 +302,8 @@ d_gcfit <- function(data,w_size,od_name,time_name,trafo="log",logBase=2,min_numP
   
   if (class(data)=="fitr_data"){
     
-    fits_list <- vector("list",length=length(data$blanks))
-    split_labels_list <- vector("list",length(data$blanks))
+    fits_list <- vector("list",length=dim(data$blanks)[1])
+    split_labels_list <- vector("list",dim(data$blanks)[1])
 
     names(fits_list) <- data$blanks[,1]
     group_colnr <- which(colnames(data$data) == colnames(data$blanks)[1])
