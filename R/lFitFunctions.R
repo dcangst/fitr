@@ -308,8 +308,8 @@ d_gcfit <- function(data,w_size,od_name,time_name,trafo="log",logBase=2,min_numP
     names(fits_list) <- data$blanks[,1]
     group_colnr <- which(colnames(data$data) == colnames(data$blanks)[1])
     
-    for(i in 1:length(data$blanks)){
-      cat("fitting growth curves for",colnames(data$blanks)[1],data$blanks[i,1],"of",data$blanks[length(data$blanks),1],"...","\n"); flush.console()
+    for(i in 1:dim(data$blanks)[1]){
+      cat("fitting growth curves for",colnames(data$blanks)[1],i,"of",dim(data$blanks)[1],paste0("(",as.character(data$blanks[i,1]),")..."),"\n"); flush.console()
       
       data_sub_group <- subset(data$data,data$data[,group_colnr]==data$blanks[i,1])
 
