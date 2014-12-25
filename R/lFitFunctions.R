@@ -152,7 +152,7 @@ pickfit <- function(fits,min_numP,RsqCutoff = 0.95,growthCheck="none") {
 #'    none
 #' @keywords fitr, growthcurve
 #' @export
-plot_fitr  <- function(bestfit,fits,data,od_name,time_name,interactive = TRUE,select = FALSE,sample_size=5) {
+plot_fitr  <- function(bestfit,fits,data,od_name,time_name,interactive = TRUE,select = FALSE,sample_size=5,save=FALSE) {
 	od_colnr <- which(colnames(data) == od_name)
   time_colnr <- which(colnames(data) == time_name)
 
@@ -240,7 +240,8 @@ plot_fitr  <- function(bestfit,fits,data,od_name,time_name,interactive = TRUE,se
     }
 
     if(bestfit_sub$comment != "ok"){
-      par(mfrow=c(2,1),oma=c(0,0,0,1),mar=c(4,4,4,0),mgp=c(3,1,0))
+      if(save){pdf(paste0(IDs[i],".pdf"))}
+      par(mfrow=c(2,1))#par(mfrow=c(2,1),oma=c(0,0,0,1),mar=c(4,4,4,0),mgp=c(3,1,0))
       printMain <- paste0(names(data_sub[,-c(od_colnr,time_colnr)]),
                        c(" = "),
                        data_sub[1,-c(od_colnr,time_colnr)],
@@ -249,13 +250,15 @@ plot_fitr  <- function(bestfit,fits,data,od_name,time_name,interactive = TRUE,se
       plot(data_sub[,time_colnr], data_sub$ODtrans, xlab="time", ylab=yName,type="b",main=printMain,ylim=y_limits,xlim=x_limits)
       legend("bottomright",legend=bestfit_sub$comment,xjust=0.5, title="no best Fit:",text.col="red")
       plot(1,1)
+      if(save){dev.off()}
       if(interactive){locator(1)}
       next
     }
 
     pointcols <- as.numeric(!(data_sub[,time_colnr] >= bestfit_sub$minT & data_sub[,time_colnr] <= bestfit_sub$maxT))
-    pointcols[pointcols==0] <- 51 
-    par(mfrow=c(2,1),oma=c(0,0,0,1),mar=c(4,4,4,0),mgp=c(3,1,0))
+    pointcols[pointcols==0] <- 51
+    if(save){pdf(paste0(IDs[i],".pdf"))}
+    par(mfrow=c(2,1))#par(mfrow=c(2,1),oma=c(0,0,0,1),mar=c(4,4,4,0),mgp=c(3,1,0))
 
     plot(data_sub[,time_colnr], data_sub$ODtrans, xlab="time", ylab=yName,type="b",main=bestfit_sub$ID,col=pointcols,ylim=y_limits,xlim=x_limits)
     abline(a=bestfit_sub$intercept ,b=bestfit_sub$mumax,col="red")
@@ -269,12 +272,12 @@ plot_fitr  <- function(bestfit,fits,data,od_name,time_name,interactive = TRUE,se
     plot(fits_sub$minT,fits_sub$mumax,col=color,xlab="sliding window start point",ylab="mumax")
     legend("topright",legend="color: adj. R squared")
     points(bestfit_sub$minT,bestfit_sub$mumax,col="blue",pch=8,cex=1.5)
-   
+    if(save){dev.off()}
     if(interactive){locator(1)}
   }
   cat("done.","\n")
 
-} # fn:plotfit
+} # fn:plot_fitr
 
 #' Wrapper function for automated growth curve fitting
 #' 

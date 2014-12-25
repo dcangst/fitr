@@ -54,7 +54,7 @@ print.fitr <- function(fitr){
 #' @param object of class "fitr"
 #' @keywords fitr
 #' @export
-plot.fitr <- function(fitr,interactive=TRUE,select=FALSE,sample_size=5){
+plot.fitr <- function(fitr,interactive=TRUE,select=FALSE,sample_size=5,save=FALSE){
 
   plot_fitr(bestfit=fitr$bestfits,
           fits=fitr$fits,
@@ -63,7 +63,8 @@ plot.fitr <- function(fitr,interactive=TRUE,select=FALSE,sample_size=5){
           time_name=fitr$parameter$time_name,
           interactive=interactive,
           select=select,
-          sample_size=sample_size)
+          sample_size=sample_size,
+          save=save)
 
 }
 #' write function for class "fitr"
