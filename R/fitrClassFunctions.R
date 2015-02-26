@@ -58,7 +58,7 @@ plot.fitr <- function(fitr,interactive=TRUE,select=FALSE,sample_size=5,save=FALS
 
   plot_fitr(bestfit=fitr$bestfits,
           fits=fitr$fits,
-          data=fitr$data$data,
+          data=fitr$data,
           od_name=fitr$parameter$od_name,
           time_name=fitr$parameter$time_name,
           interactive=interactive,
