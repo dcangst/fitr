@@ -242,12 +242,7 @@ plot_fitr  <- function(bestfit,fits,data,od_name,time_name,interactive = TRUE,se
     if(bestfit_sub$comment != "ok"){
       if(save){pdf(paste0(IDs[i],".pdf"))}
       par(mfrow=c(2,1))#par(mfrow=c(2,1),oma=c(0,0,0,1),mar=c(4,4,4,0),mgp=c(3,1,0))
-      printMain <- paste0(names(data_sub[,-c(od_colnr,time_colnr)]),
-                       c(" = "),
-                       data_sub[1,-c(od_colnr,time_colnr)],
-                       collapse=" | "
-                       )
-      plot(data_sub[,time_colnr], data_sub$ODtrans, xlab="time", ylab=yName,type="b",main=printMain,ylim=y_limits,xlim=x_limits)
+      plot(data_sub[,time_colnr], data_sub$ODtrans, xlab="time", ylab=yName,type="b",main=bestfit_sub$ID,ylim=y_limits,xlim=x_limits)
       legend("bottomright",legend=bestfit_sub$comment,xjust=0.5, title="no best Fit:",text.col="red")
       plot(1,1)
       if(save){dev.off()}

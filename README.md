@@ -5,7 +5,7 @@
 
 ## How to install
 
-To install `fitR` you need the [`devtools`](https://github.com/hadley/devtools) package which can be installed from CRAN. Once installed you can run the following code to get the latest stable `fitR`:
+To install `fitR` you need the [`devtools`](https://github.com/hadley/devtools)package which can be installed from CRAN. Once installed you can run the following code to get the latest stable `fitR`:
 
 ```
 library(devtools)
