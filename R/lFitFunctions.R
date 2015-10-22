@@ -36,7 +36,7 @@ gcfit	<-	function(data,w_size,od_name,time_name,trafo="log",logBase=2,growthChec
 
     filler <- rep(NA,numfits)
 
-    fits <- data.frame(minT=filler,maxT=filler,numP=filler,nTime=filler,mumax=filler,intercept=filler,adj.r.sq=filler,dt=filler,maxOD=max(data[,od_colnr],na.rm=TRUE),trafo=trafo,logBase=logBase,growth=TRUE,comment=filler) 
+    fits <- data.frame(minT=filler,maxT=filler,numP=filler,nTime=filler,mumax=filler,intercept=filler,adj.r.sq=filler,dt=filler,maxOD=max(data[,od_colnr],na.rm=TRUE),minOD=min(data[,od_colnr],na.rm=TRUE),trafo=trafo,logBase=logBase,growth=TRUE,comment=filler) 
     
     for (i in 1:numfits) {
   
