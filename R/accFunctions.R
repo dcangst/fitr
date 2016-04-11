@@ -2,10 +2,11 @@
 #'
 #' internal function to transform od values. -Inf, NaN values are replaced with NA.
 #'
-#' @param data
-#' @param od_colnr
-#' @param time_colnr
-#' @param trafo
+#' @param data data
+#' @param od_colnr col with OD values
+#' @param time_colnr col with times
+#' @param trafo which trafo to use
+#' @param logBase which logbase (default: 2)
 #' @section Output:
 #'    data.frame as input with new colum 'ODtrans'
 #' @keywords fitr
