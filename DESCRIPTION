@@ -1,6 +1,6 @@
 Package: fitr
 Title: Bacterial Growth Rate Estimation in R
-Version: 0.4
+Version: 0.4.6
 Author: Daniel Angst <dcangst@gmail.com>
 Maintainer: Daniel Angst <dcangst@gmail.com>
 Description: This package uses a sliding window of linear fits to estimate
@@ -12,4 +12,4 @@ Imports:
     doParallel
 License: GPL-3
 LazyData: true
-RoxygenNote: 5.0.1.9000
+RoxygenNote: 7.2.1

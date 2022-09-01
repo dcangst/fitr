@@ -3,7 +3,6 @@
 S3method(plot,fitr)
 S3method(print,fitr)
 export(d_gcfit)
-export(gcblanking)
 export(gcfit)
 export(pickfit)
 export(plot_fitr)

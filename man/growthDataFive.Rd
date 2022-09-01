@@ -4,7 +4,9 @@
 \name{growthDataFive}
 \alias{growthDataFive}
 \title{Five growth curve}
-\format{A data frame with 485 rows and 10 variables}
+\format{
+A data frame with 485 rows and 10 variables
+}
 \usage{
 data(growthDataFive)
 }
@@ -26,4 +28,3 @@ A dataset containing five growth curve
 }
 \keyword{datasets,}
 \keyword{fitr}
-

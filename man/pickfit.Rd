@@ -11,15 +11,17 @@ pickfit(fits, min_numP, RsqCutoff = 0.95, growthCheck = "none")
 
 \item{min_numP}{minimum number of points for fit}
 
-\item{RsqCutoff}{Only fits with an adjusted R squared (see \code{\link{summary.lm}}) higher than the cutoff are considered. Defaults to 0.95.}
+\item{RsqCutoff}{Only fits with an adjusted R squared (see \code{\link{summary.lm}}) higher than the
+cutoff are considered. Defaults to 0.95.}
 }
 \description{
-pick the 'most valid' fit. This will be the fit with the highest mumax and an adjusted R squared above \code{RsqCutoff}
+pick the 'most valid' fit. This will be the fit with the highest mumax and an adjusted
+ R squared above \code{RsqCutoff}
 }
 \section{Output}{
 
    \code{data.frame} best fits.
 }
+
 \keyword{fitr,}
 \keyword{growthcurve}
-

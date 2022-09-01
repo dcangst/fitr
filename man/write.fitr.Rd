@@ -4,13 +4,18 @@
 \alias{write.fitr}
 \title{write function for class "fitr"}
 \usage{
-write.fitr(fitr, basefile = paste0(format(Sys.time(), "\%Y\%m\%d"), "fitR"),
-  description = FALSE, sep = ";")
+write.fitr(
+  fitr,
+  basefile = paste0(format(Sys.time(), "\%Y\%m\%d"), "fitR"),
+  description = FALSE,
+  sep = ";"
+)
 }
 \arguments{
 \item{basefile}{base file name (not including .csv)}
 
-\item{description}{data.frame containing description of your curves, must contain ID column with unique ID for each curve.}
+\item{description}{data.frame containing description of your curves, must contain
+ID column with unique ID for each curve.}
 
 \item{object}{of class "fitr"}
 
@@ -20,4 +25,3 @@ write.fitr(fitr, basefile = paste0(format(Sys.time(), "\%Y\%m\%d"), "fitR"),
 writes contents of fitr object in a 3 .csv files, *_summary.csv, *_fits.csv and *_data.csv
 }
 \keyword{fitr}
-

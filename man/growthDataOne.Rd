@@ -4,7 +4,9 @@
 \name{growthDataOne}
 \alias{growthDataOne}
 \title{One growth curve}
-\format{A data frame with 97 rows and 10 variables}
+\format{
+A data frame with 97 rows and 10 variables
+}
 \usage{
 data(growthDataOne)
 }
@@ -26,4 +28,3 @@ A dataset containing one growth curve
 }
 \keyword{datasets,}
 \keyword{fitr}
-

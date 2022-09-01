@@ -3,7 +3,6 @@
 \docType{package}
 \name{fitr}
 \alias{fitr}
-\alias{fitr-package}
 \title{fitr.
 A package containing tools for estimation of maximum growthrates from many growthcurves.}
 \description{
@@ -14,4 +13,3 @@ A package containing tools for estimation of maximum growthrates from many growt
 \code{\link{print.fitr}}
 \code{\link{plot.fitr}}
 }
-

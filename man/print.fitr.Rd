@@ -13,4 +13,3 @@
 prints description of data and selected 'best' fits
 }
 \keyword{fitr}
-

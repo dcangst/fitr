@@ -3,17 +3,8 @@
 \name{d_gcfit}
 \alias{d_gcfit}
 \title{Wrapper function for automated growth curve fitting}
-\usage{
-d_gcfit(data, w_size, od_name, time_name, trafo = "log", logBase = 2,
-  min_numP = w_size, growthCheck = "none", RsqCutoff = 0.95,
-  parallel = FALSE, progress = "text", ...)
-}
 \arguments{
-\item{data}{long-form data frame with growth data, must contain column named ID with a unique ID for each curve.}
-
 \item{w_size}{size of sliding window (number of datapoints considered)}
-
-\item{od_name}{name of column containing OD values}
 
 \item{time_name}{name of column containing times (in units after start of experiment)}
 
@@ -23,23 +14,47 @@ d_gcfit(data, w_size, od_name, time_name, trafo = "log", logBase = 2,
 
 \item{min_numP}{minimum number of points for fit to be acceptable, defaults to \code{"w_size"}}
 
-\item{growthCheck}{Check whether there was growth at all. One of \code{"none"} (no Check), \code{"sd2"} (Growth only if difference between minimal and maximal OD is larger than twice the standard deviation of the blanks). Requires data of class \code{"fitr_data"}}
+\item{growthCheck}{Check whether there was growth at all.
+One of \code{"none"} (no Check),
+\code{"sd2"} (Growth only if difference between minimal and maximal OD is larger than
+twice the standard deviation of the blanks). Requires data of class \code{"fitr_data"}}
 
-\item{RsqCutoff}{Only fits with a correlation coefficient higher than the cutoff are considered. Defaults to \code{0.95}.}
+\item{RsqCutoff}{Only fits with a correlation coefficient higher than the cutoff are considered.
+Defaults to \code{0.95}.}
 
-\item{parallel}{if \code{TRUE}, apply function in parallel, using parallel backend provided by \code{\link[foreach]{foreach}}.}
+\item{parallel}{if \code{TRUE}, apply function in parallel, using parallel backend provided by
+\code{\link[foreach]{foreach}}.}
 
 \item{progress}{name of the progress bar to use, see \code{\link[plyr]{create_progress_bar}}}
 
 \item{...}{additional parameters passed to ply functions.}
+
+\item{data}{long-form data frame with growth data, must contain column named ID with a unique ID for each curve.}
+
+\item{group}{name of grouping variable (e.g. plates for which blanks must be seperate), a factor.}
+
+\item{od_name}{name of column containing OD values}
+
+\item{bl_col}{name of column containing well description, e.g. "strain"}
+
+\item{bl_name}{which wells are blanks?, e.g. "bl"}
+
+\item{cutoff}{discard values <= cutoff}
 }
 \description{
 Wrapper function for automated growth curve fitting
+
+Function for blanking OD data & flagging growth/no growth
 }
 \section{Output}{
 
    an object of class fitr.
+
+
+   long-form data frame with additional columns od_name_bl (blanked OD values) and QCgrowth (logical)
 }
+
+\keyword{blanking}
 \keyword{fitr,}
 \keyword{growthcurve}
-
+\keyword{growthcurve,}
