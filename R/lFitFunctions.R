@@ -368,7 +368,7 @@ d_gcfit <- function(data, w_size, od_name, time_name,
     doParallel::registerDoParallel()
   }
 
-  if (class(data) == "fitr_data") {
+  if ("fitr_data" %in%  class(data)) {
     fits_list <- vector("list", length = dim(data$blanks)[1])
     split_labels_list <- vector("list", dim(data$blanks)[1])
 
